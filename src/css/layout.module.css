@@ -1,0 +1,8 @@
+.formDiv {
+    display:flex;
+    flex-direction: column;
+    gap: 0;
+}
+.image_top {
+background-size: 100% 50%;
+}
