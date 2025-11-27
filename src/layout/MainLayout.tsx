@@ -5,13 +5,14 @@ export default function MainLayout() {
     return <div style={{
         display: 'flex' ,
         flexDirection: 'column',
-        width: '100%'        // <- BẮT BUỘC
+        overflowX: 'hidden',
+        width: '98vw' 
     }}>
         <NavBar />
         <main style={{width: '100%', marginTop: '64px'}}>
             <Outlet />
         </main>
-        <footer>
+        <footer style={{padding: 10}}>
             <Footer />
         </footer>
     </div>
