@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Grid, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, Button, Card, CardActionArea, CardActions, CardContent, CardHeader, CardMedia, Grid, IconButton, Typography } from "@mui/material";
 import background from '../../assets/backgroud2.jpg'
 import background2 from '../../assets/dongLucp1.jpg'
 import AndroidIcon from '@mui/icons-material/Android';
@@ -8,31 +8,39 @@ import AttractionsIcon from '@mui/icons-material/Attractions';
 import PersonIcon from '@mui/icons-material/Person';
 import SubjectIcon from '@mui/icons-material/Subject';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import TestFree from "./Homepage/TestFree";
 import DialogStart from "./Homepage/DialogStart";
 import StartPractice from "./Homepage/StartPractice";
 // import { Outlet } from "react-router-dom";
 import html_css from '../../assets/html-css.png'
-import react from '../../assets/reactjs-ts.png'
-import php from '../../assets/php.jpg'
-import mssql from '../../assets/mssql.png';
-import javaS from '../../assets/JavaScript.jpg'
-import c_plus from '../../assets/c-logo.png'
 // import cSharp from '../../assets/c#.png'
 import { motion } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
+import { type Subject } from "../../model/apiResponse/Subject";
+import axios from "axios";
+import ViewExamSubject from "../generic/ViewExamSubject";
 export default function HomePage() {
   const navigate = useNavigate()
+  const [account, setAccount] = useState<number>(0);
+  const [question, setQuestion] = useState<number>(0);
+  const [exam, setExam] = useState<number>(0);
+  const [codeSubject, setCodeSubject] = useState<string>('');
+  const [subjects, setSubject] = useState<Subject[]>([])
+  const [loading, setLoading] = useState<boolean>(false);
   const [openStart, setOpenStart] = useState<boolean>(false)
   const [openStartPractice, setOpenStartPractice] = useState<boolean>(false);
   const handleOpenStart = () => setOpenStart(true)
   const handleCloseStart = () => setOpenStart(false)
 
   const handleClosePractice = () => setOpenStartPractice(false);
-  const tokenUser = localStorage.getItem('tokenUser')
+
+
+  // const tokenUser = localStorage.getItem('tokenUser')
   const handleStartLogon = () => {
     setOpenStartPractice(true)
     // if(!tokenUser){
@@ -40,8 +48,44 @@ export default function HomePage() {
     // } 
     // return <Excersice />
   }
+  const handleClickSubject = (code: string) => {
+    setCodeSubject(code)
+    if (!localStorage.getItem('tokenUser')) {
+      setOpenStartPractice(true);
+    } else {
+      navigate(`subject/${code}`)
+    }
+  }
+  const getAllDataFromApi = async () => {
+    setLoading(true);
+    try {
+      const [account, question, exam, subjects] =
+        await Promise.all(
+          [axios.get('http://localhost:8089/api/Account/count'),
+          axios.get('http://localhost:8089/api/Exam/countExam'),
+          axios.get('http://localhost:8089/api/Question/countQuestion'),
+          axios.get('http://localhost:8089/api/Subject/subjects')
+          ])
+      console.log('lấy dữ liệu thành công.')
+      setAccount(account.data);
+      setQuestion(question.data);
+      setExam(exam.data);
+      setSubject(subjects.data);
+    } catch (err) {
+      console.error('lỗi,', err)
+    } finally {
+      setLoading(false);
+    }
+  }
+  useEffect(() => {
+    getAllDataFromApi()
+  }, [])
+
   return <Box
     display={'flex'}
+    pl={1}
+    width={'98vw'}
+    position={'relative'}
     flexDirection={'column'}
   >
     <Box
@@ -146,15 +190,21 @@ export default function HomePage() {
       <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
         component={'button'} onClick={() => alert('như cặc')}
         sx={{
-          '&:hover': {
-            backgroundColor: 'lightgray'
-            ,
-            borderColor: 'none'
+          outline: 'none',
+          '&:focus': {
+            outline: 'none'
           },
-          '&:active': {
-            transform: 'translate(0px)',
-            background: 'white'
+          '&:hover': {
+            backgroundColor: 'lightgray',
+            transition: '0.2s linear',
+            transform: 'scale(1.2,1.2)',
+            borderColor: 'none',
+            outline: 'none'
+          },
+          '&:not(:hover)': {
+            transition: '0.5s'
           }
+
         }}
       >
         <AndroidIcon sx={{ fontSize: 100 }} />
@@ -162,14 +212,19 @@ export default function HomePage() {
       <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
         component={'button'} onClick={() => alert('như cặc')}
         sx={{
-          '&:hover': {
-            backgroundColor: 'lightgray'
-            ,
-            borderColor: 'none'
+          outline: 'none',
+          '&:focus': {
+            outline: 'none'
           },
-          '&:active': {
-            transform: 'translate(0px)',
-            background: 'white'
+          '&:hover': {
+            backgroundColor: 'lightgray',
+            transition: '0.2s linear',
+            transform: 'scale(1.2,1.2)',
+            borderColor: 'none',
+            outline: 'none'
+          },
+          '&:not(:hover)': {
+            transition: '0.5s'
           }
         }}
       >
@@ -178,14 +233,19 @@ export default function HomePage() {
       <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
         component={'button'} onClick={() => alert('như cặc')}
         sx={{
-          '&:hover': {
-            backgroundColor: 'lightgray'
-            ,
-            borderColor: 'none'
+          outline: 'none',
+          '&:focus': {
+            outline: 'none'
           },
-          '&:active': {
-            transform: 'translate(0px)',
-            background: 'white'
+          '&:hover': {
+            backgroundColor: 'lightgray',
+            transition: '0.2s linear',
+            transform: 'scale(1.2,1.2)',
+            borderColor: 'none',
+            outline: 'none'
+          },
+          '&:not(:hover)': {
+            transition: '0.5s'
           }
         }}
       >
@@ -194,14 +254,19 @@ export default function HomePage() {
       <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
         component={'button'} onClick={() => alert('như cặc')}
         sx={{
-          '&:hover': {
-            backgroundColor: 'lightgray'
-            ,
-            borderColor: 'none'
+          outline: 'none',
+          '&:focus': {
+            outline: 'none'
           },
-          '&:active': {
-            transform: 'translate(0px)',
-            background: 'white'
+          '&:hover': {
+            backgroundColor: 'lightgray',
+            transition: '0.2s linear',
+            transform: 'scale(1.2,1.2)',
+            borderColor: 'none',
+            outline: 'none'
+          },
+          '&:not(:hover)': {
+            transition: '0.5s'
           }
         }}
       >
@@ -210,16 +275,19 @@ export default function HomePage() {
       <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
         component={'button'} onClick={() => alert('như cặc')}
         sx={{
-          borderColor: 'none',
           outline: 'none',
-          '&:hover': {
-            outline: 'none',
-            backgroundColor: 'lightgray',
-            borderColor: 'none'
+          '&:focus': {
+            outline: 'none'
           },
-          '&:active': {
-            transform: 'translate(0px)',
-            background: 'white'
+          '&:hover': {
+            backgroundColor: 'lightgray',
+            transition: '0.2s linear',
+            transform: 'scale(1.2,1.2)',
+            borderColor: 'none',
+            outline: 'none'
+          },
+          '&:not(:hover)': {
+            transition: '0.5s'
           }
         }}
       >
@@ -266,11 +334,6 @@ export default function HomePage() {
       </Grid>
     </Box>
     <motion.div
-      initial={{ y: -60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{
-        duration: 1, ease: 'easeOut'
-      }}
     >
       <Box width={'99vw'} height={'40vh'} mt={1}>
         <Grid container spacing={3}
@@ -291,6 +354,9 @@ export default function HomePage() {
                 <Typography>
                   Hỗ trợ online 24/7
                 </Typography>
+                <Typography>
+
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -310,6 +376,9 @@ export default function HomePage() {
                 <Typography>
                   Số người dùng hiện tại
                 </Typography>
+                <Typography variant="h4" component={'h4'}>
+                  {account}+
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -327,6 +396,9 @@ export default function HomePage() {
                 <Typography>
                   Câu hỏi đươc cập nhật mới theo ngày
                 </Typography>
+                <Typography component={'h4'} variant="h4">
+                  {question}+
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
@@ -343,6 +415,9 @@ export default function HomePage() {
               <CardContent>
                 <Typography>
                   Số lượng đề thi
+                </Typography>
+                <Typography component={'h4'} variant="h4">
+                  {exam}+
                 </Typography>
               </CardContent>
             </Card>
@@ -374,252 +449,63 @@ export default function HomePage() {
         <Grid size={3}></Grid>
       </Grid>
     </Box>
-    <Box width={'99vw'} height='86vh'
+    <Box width={'99vw'} height='auto' p={5}
       display={'flex'} flexDirection={'column'} gap={3}
     >
-      <Grid width={'100%'} height={'50%'} container columns={24}
+      <Grid width={'100%'} height={'50%'} container columns={20}
         display={'flex'} flexDirection={'row'} spacing={3} mb={4}
       >
-        <Grid size={2}></Grid>
-        <Grid size={5}
-          sx={{
-            transition: '0.5s',
-            '&:hover': {
-              transition: '0.5s ease',
-              transform: 'translateY(-10px)',
-              boxShadow: '4px 4px 6px lightgray'
-            }
-          }}
+        {/* <Grid size={2}></Grid> */}
+        {loading ? (<Backdrop
+          sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
+          open={loading}
         >
-          <Card sx={{
-            width: '100%', height: '100%', outline: 'none',
-            '&:focus, &:hover': {
-              outline: 'none',
-              borderColor: 'white'
-            }
-          }} component={'button'} onDoubleClick={() => alert('thần đằng')}>
-            <CardHeader title='Thiết kế website với HTML-CSS' />
-            <CardMedia
-              component={'img'}
-              image={html_css}
-            />
-            <CardContent>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={5}
-          sx={{
-            transition: '0.5s',
-            '&:hover': {
-              transition: '0.5s ease',
-              transform: 'translateY(-10px)',
-              boxShadow: '4px 4px 6px lightgray'
-            }
-          }}
-        >
-          <Card sx={{
-            width: '100%', height: '100%', outline: 'none',
-            '&:focus, &:hover': {
-              outline: 'none',
-              borderColor: 'white'
-            }
-          }} component={'button'} onDoubleClick={() => alert('thần đằng')}>
-            <CardHeader title='ReactJS - TS' />
-            <CardMedia
-              component={'img'}
-              width={'150px'}
-              height={'150px'}
-              image={react}
-            />
-            <CardContent>
-
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={5}
-          sx={{
-            transition: '0.5s',
-            '&:hover': {
-              transition: '0.5s ease',
-              transform: 'translateY(-10px)',
-              boxShadow: '4px 4px 6px lightgray'
-            }
-          }}
-        >
-          <Card sx={{
-            width: '100%', height: '100%', outline: 'none',
-            '&:focus, &:hover': {
-              outline: 'none',
-              borderColor: 'white'
-            }
-          }} component={'button'} onDoubleClick={() => alert('thần đằng')}>
-            <CardHeader title='Lập trình với PHP' />
-            <CardMedia
-              component={'img'}
-              image={php}
-            />
-            <CardContent>
-
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={5}
-          sx={{
-            transition: '0.5s',
-            '&:hover': {
-              transition: '0.5s ease',
-              transform: 'translateY(-10px)',
-              boxShadow: '4px 4px 6px lightgray'
-            }
-          }}
-        >
-          <Card sx={{
-            width: '100%', height: '100%',
-            outline: 'none',
-            '&:focus, &:hover': {
-              outline: 'none',
-              borderColor: 'white'
-            }
-          }} component={'button'} onDoubleClick={() => alert('thần đằng')}>
-            <CardHeader title='Cơ sở dữ liệu(MSSQL)'></CardHeader>
-            <CardMedia
-              component={'div'}
-              image={mssql}
-            />
-            <CardContent>
-
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={2}></Grid>
-      </Grid>
-      <Grid width={'100%'} height={'50%'} container columns={24} mt={1}
-        display={'flex'} flexDirection={'row'} spacing={3}
-      >
-        <Grid size={2}></Grid>
-        <Grid height={'106%'} size={5} sx={{
-          transition: '0.5s',
-          '&:hover': {
-            transition: '0.5s ease',
-            transform: 'translateY(-10px)',
-            boxShadow: '4px 4px 6px lightgray'
-          }
-        }} >
-          <Card sx={{
-            width: '100%', height: '100%',
-            outline: 'none',
-            '&:focus, &:hover': {
-              outline: 'none',
-              borderColor: 'white'
-            }
-          }} component={'button'} onDoubleClick={() => alert('thần đằng')}>
-            <CardHeader title='Lập trình Javascript'></CardHeader>
-            <CardMedia
-              component={'img'}
-              height={'205px'}
-              image={javaS}
-            />
-            <CardContent>
-
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid height={'106%'} size={5} sx={{
-          transition: '0.5s',
-          '&:hover': {
-            transition: '0.5s ease',
-            transform: 'translateY(-10px)',
-            boxShadow: '4px 4px 6px lightgray'
-          }
-        }}>
-          <Card sx={{
-            width: '100%', height: '100%',
-            outline: 'none',
-            '&:focus, &:hover': {
-              outline: 'none',
-              borderColor: 'white'
-            }
-          }} component={'button'} onDoubleClick={() => alert('thần đằng')}>
-            <CardHeader title='Lập trình Java'></CardHeader>
-            <CardMedia
-              component={'img'}
-            // image={java}
-            />
-            <CardContent>
-
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid height={'106%'} size={5} sx={{
-          transition: '0.5s',
-          '&:hover': {
-            transition: '0.5s ease',
-            transform: 'translateY(-10px)',
-            boxShadow: '4px 4px 6px lightgray'
-          }
-        }}>
-          <Card sx={{
-            width: '100%',
-            height: '100%',
-            cursor: 'pointer',
-            outline: 'none',
-            '&:focus, &:hover': {
-              outline: 'none',
-              borderColor: 'white'
-            }
-          }} component={'button'}
-            onClick={() => alert('con cặc')}
+          <CircularProgress color="inherit" />
+        </Backdrop>) : subjects.map((sub) => (
+          <Grid size={5}
+            key={sub.id}
+            sx={{
+              transition: '0.5s',
+              '&:hover': {
+                transition: '0.5s ease',
+                transform: 'translateY(-10px)',
+                boxShadow: '4px 4px 6px lightgray'
+              }
+            }}
           >
-            <CardHeader title='Lập trình C#' />
-            <CardMedia
-              component={'img'}
-            // image={cSharp}
-            />
-            <CardContent>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid height={'106%'} size={5} sx={{
-          transition: '0.5s',
-          '&:hover': {
-            transition: '0.5s ease',
-            transform: 'translateY(-10px)',
-            boxShadow: '4px 4px 6px lightgray'
-          }
-        }}>
-          <Card sx={{
-            width: '100%', height: '100%', cursor: 'pointer', outline: 'none',
-            '&:hover': {
-              borderColor: 'white',
-            },
-            '&:focus': {
-              outline: 'none',             // cho cả trường hợp focus bằng tab
-            },
-            '&:focus-visible': {
-              outline: 'none',
-              // Nếu mày vẫn muốn người dùng biết đang focus (accessibility tốt hơn)
-              // thì thay vì outline mặc định, dùng cái gì đó đẹp hơn:
-              boxShadow: '0 0 0 3px rgba(255, 255, 255, 0.5)', // ví dụ viền trắng mờ
-              // hoặc
-              // border: '2px solid white',
-            },
-
-          }} component={'button'} onClick={() => alert('con cặc')}>
-            <CardHeader title='Lập trình với C/C++' sx={{ padding: 1 }} />
-            <CardMedia
-              component={'img'}
-              height={'200px'}
-              image={c_plus}
-            />
-            <CardContent>
-
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid size={2}></Grid>
+            <CardActionArea sx={{
+              width: '100%', height: '100%', outline: 'none',
+              '&:focus, &:hover': {
+                outline: 'none',
+                borderColor: 'white'
+              }
+            }} onDoubleClick={() => alert('thần đằng')} onClick={() => handleClickSubject(sub.code)}>
+              <CardHeader title={sub.name} />
+              <CardMedia
+                component={'img'}
+                image={html_css}
+              />
+              <CardContent>
+              </CardContent>
+            </CardActionArea>
+          </Grid>
+        ))}
+        {/* <Grid size={2}></Grid> */}
       </Grid>
     </Box>
-    <Box width={'99vw'} height={'90vh'} mt={15}>
+    <Box width={'99vw'} height={'50vh'} mt={12} bgcolor={'lightblue'} p={4}>
+      <Box width={'100%'} height={'100%'}>
+        <Box height={'15%'}>
+          <Typography variant="h4">
+            Các chủ đề, lĩnh vực khác mà bạn có thể tham khảo
+          </Typography>
+        </Box>
+        <Box height={'85%'} bgcolor={'lightcoral'}>
+
+        </Box>
+      </Box>
+    </Box>
+    <Box width={'99vw'} height={'90vh'}>
       <Grid container spacing={2}>
         <Grid size={6}>
           <Box width={'100%'} height={'100%'} p={10}
@@ -662,5 +548,6 @@ export default function HomePage() {
     </Box>
     <DialogStart open={openStart} handleClose={handleCloseStart} />
     <StartPractice open={openStartPractice} handleClose={handleClosePractice} />
+    <ViewExamSubject open={openStartPractice} handleClose={handleClosePractice} code={codeSubject} />
   </Box>
 }
