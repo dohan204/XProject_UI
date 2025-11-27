@@ -3,10 +3,12 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { type Question, type ExamDetails } from '../../../model/apiResponse/ExamDetails';
 import axios from 'axios';
 import type { Props } from '../../../model/props/Home';
+import TimeDown from '../../protectedPage/subjectExam/TimeDown';
 
 export default function TestFree({ openTest }: Props) {
   const [numberOfQuestion, setNumberOfQuestion] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
+  const [time, setTime] = useState<number>(0)
   const [exam, setExam] = useState<ExamDetails | null>(null)
   const [questions, setQuestions] = useState<Question[]>([]) // Đổi tên biến cho rõ ràng hơn
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0); // State mới: Theo dõi chỉ mục câu hỏi hiện tại
@@ -21,6 +23,7 @@ export default function TestFree({ openTest }: Props) {
         setExam(result)
         setQuestions(result ? result.question : [])
         setNumberOfQuestion(result.numberOfQuestions);
+        setTime(result.timeTest)
         setCurrentQuestionIndex(0); // Reset về câu hỏi đầu tiên khi tải đề thi mới
       } catch (err) {
         console.error('tải dữ liệu không thành công.');
@@ -34,7 +37,7 @@ export default function TestFree({ openTest }: Props) {
   useEffect(() => {
     fetchData()
   }, [openTest])
-
+  
   // Hàm xử lý khi bấm nút "Next"
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
@@ -88,7 +91,7 @@ export default function TestFree({ openTest }: Props) {
               </Box>
               <Box width={'34%'} height={'100%'} alignContent={'center'} justifyItems={'center'} component={Paper}>
                 <Typography component={'h4'} variant='h4'>
-                  Thời Gian làm bài: {exam?.timeTest}
+                  Thời Gian làm bài: {<TimeDown time={exam?.timeTest} />}
                 </Typography>
               </Box>
             </Box>

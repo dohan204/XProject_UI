@@ -11,8 +11,9 @@ import { Controller, useForm, type SubmitHandler } from "react-hook-form"
 import { useState } from "react";
 import axios from "axios";
 import styles from '../../css/authentication.module.css';
-import {Link, useNavigate } from "react-router-dom";
+import {Link, useLocation, useNavigate } from "react-router-dom";
 export default function Login() {
+    const location = useLocation();
     const navigate = useNavigate()
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
@@ -43,6 +44,13 @@ export default function Login() {
             setLoading(false)
         }
     }
+    const currentRouter = location.pathname;
+    let newRouterRegister = currentRouter;
+    console.log(currentRouter)
+    if(currentRouter == '/login'){
+        newRouterRegister = currentRouter.replaceAll('/login', '/register')
+    }
+    console.log(newRouterRegister);
     return (
         <Box component={Paper}
             width={320}
@@ -130,8 +138,8 @@ export default function Login() {
                         />
                     }
                 /> */}
-                <Typography component={Link} to='register'>
-                    Bạn chưa có tài khoản, ấn vào đây nhé
+                <Typography component={Link} to='/register'>
+                    Nếu chưa có tài khoản, vào đăng ký nhé!!
                 </Typography>
             </Stack>
         </Box>

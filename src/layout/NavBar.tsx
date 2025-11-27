@@ -178,7 +178,12 @@ export default function NavBar() {
                             </MenuItem>
                         </Box>
                         {token ? (
-                            <Box sx={{ flexGrow: 0 }}>
+                            <Box sx={{ flexGrow: 0 , display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                                ,alignItems: 'center'
+                            }}>
+                                <Typography sx={{p: 2}}>
+                                    Xin chào
+                                </Typography>
                                 <Tooltip title="Open settings">
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                                         <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
