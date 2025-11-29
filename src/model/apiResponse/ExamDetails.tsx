@@ -3,7 +3,7 @@ export interface ExamDetails {
     name: string, 
     subjectName: string,
     numberOfQuestions: number,
-    timeTest: number,
+    timeTest: number ,
     question: Question[]
 }
 export interface Question {
@@ -14,4 +14,11 @@ export interface Question {
     optionB: string,
     optionC: string, 
     optionD: string
+}
+export interface Exam {
+    id: number,
+    examName: string,
+    testingTime: number,
+    numberOfQuestion: number,
+    subjectName: string,
 }

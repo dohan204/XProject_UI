@@ -5,3 +5,6 @@ export interface PropsStart {
 export interface Props {
     openTest: boolean
 }
+export interface PropsExamId {
+    id: number
+}

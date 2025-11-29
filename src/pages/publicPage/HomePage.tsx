@@ -23,6 +23,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
 import { type Subject } from "../../model/apiResponse/Subject";
 import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 import ViewExamSubject from "../generic/ViewExamSubject";
 export default function HomePage() {
   const navigate = useNavigate()
@@ -77,10 +78,11 @@ export default function HomePage() {
       setLoading(false);
     }
   }
+
   useEffect(() => {
     getAllDataFromApi()
   }, [])
-
+  
   return <Box
     display={'flex'}
     pl={1}
@@ -493,7 +495,7 @@ export default function HomePage() {
         {/* <Grid size={2}></Grid> */}
       </Grid>
     </Box>
-    <Box width={'99vw'} height={'50vh'} mt={12} bgcolor={'lightblue'} p={4}>
+    <Box width={'100%'} height={'50vh'} bgcolor={'lightblue'} m={1}>
       <Box width={'100%'} height={'100%'}>
         <Box height={'15%'}>
           <Typography variant="h4">

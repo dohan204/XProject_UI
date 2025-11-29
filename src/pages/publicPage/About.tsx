@@ -117,7 +117,11 @@ export default function About() {
                             width: '100%', height: '100%',
                             // transition: 'with 2s',
                             '&:hover': {
-                                transform: 'translateY(-8px)'
+                                transform: 'translateY(-8px)',
+                                transition: '0.2s linear'
+                            },
+                            '&:not(:hover)': {
+                                transition: '0.2s linear'
                             }
                         }}>
                             <CardHeader title='Gói thành viên' />
@@ -129,7 +133,15 @@ export default function About() {
                         </Card>
                     </Box>
                     <Box width={'25%'}>
-                        <Card sx={{ width: '100%', height: '100%' }}>
+                        <Card sx={{
+                            width: '100%', height: '100%', '&:hover': {
+                                transform: 'translateY(-8px)',
+                                transition: '0.2s linear'
+                            },
+                            '&:not(:hover)': {
+                                transition: '0.2s linear'
+                            }
+                        }}>
                             <CardHeader title='Gói Prenium' />
                             <CardContent>
                                 <Typography>
@@ -139,7 +151,15 @@ export default function About() {
                         </Card>
                     </Box>
                     <Box width={'25%'}>
-                        <Card sx={{ width: '100%', height: '100%' }}>
+                        <Card sx={{
+                            width: '100%', height: '100%', '&:hover': {
+                                transform: 'translateY(-8px)',
+                                transition: '0.2s linear'
+                            },
+                            '&:not(:hover)': {
+                                transition: '0.2s linear'
+                            }
+                        }}>
                             <CardHeader title='Gói siêu Prenium' />
                             <CardContent>
                                 <Typography>
