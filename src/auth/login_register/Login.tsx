@@ -14,7 +14,8 @@ import styles from '../../css/authentication.module.css';
 import {Link, useLocation, useNavigate } from "react-router-dom";
 export default function Login() {
     const location = useLocation();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const [error, setError] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
     const handleClickShowPassword = () => setShowPassword(show => !show)
@@ -35,11 +36,24 @@ export default function Login() {
         try {
             const res = await axios.post('http://localhost:8089/api/Account/login', data)
             const result = res.data
-            localStorage.setItem('token', result.token)
+            const token: string = result.token
+            localStorage.setItem('token', token)
             localStorage.setItem('tokenUser', result.userId)
             navigate('/', {replace: true})
         } catch (err) {
-            console.error('lỗi',err)
+            if(axios.isAxiosError(err)){
+                if(err.response?.status === 401){
+                    setError("Tài khoản hoặc mật khẩu không chính xác.")
+                } else if (err.response?.status === 500) {
+                    setError("Lỗi server, vui lòng liên hệ với người quản trị.");
+                } else if (err.response?.status === 404) {
+                    setError("Không có thông tin người dùng")
+                } else {
+                    setError("Vui lòng thử lại sau")
+                }
+            } else {
+                setError("Có lỗi sảy ra vui lòng thử lại.")
+            }
         } finally {
             setLoading(false)
         }

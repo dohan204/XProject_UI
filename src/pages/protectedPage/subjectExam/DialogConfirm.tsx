@@ -7,9 +7,16 @@ interface props {
     handleClose: () => void,
     examId?: number
 }
+interface responseApi {
+    totalQuestions: number,
+    correctAnswers: number,
+    wrongAnswers: number,
+    score: number
+}
 
 export default function DialogConfirm({open, handleClose, examId}: props) {
     const [loading, setLoading] = useState<boolean>(false);
+    const [result, setResult] = useState<responseApi|null>(null);
     const navigate = useNavigate();
     const exam = localStorage.getItem('exam');
     const handlePostExamToServer = async () => {
@@ -20,17 +27,28 @@ export default function DialogConfirm({open, handleClose, examId}: props) {
         const examData = JSON.parse(exam);
         setLoading(true);
         try {
-            await axios.post(`https://localhost:7151/api/Exam/submitExam/${examId}`, examData, {
-                headers: {'Content-Type': 'application/json'}
+            var result = await axios.post(`http://localhost:8089/api/Exam/submitExam/${examId}`, examData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
             })
-            console.log('gui du lieu thang cong.')
+            const res = JSON.stringify(result.data)
+            localStorage.setItem('resultExam', res);
+            // setResult(res);
         } catch (errr) {
-            console.log('loix', errr)
+            if(axios.isAxiosError(errr)){
+                if(errr.response?.status === 500){
+                    console.log("lỗi server, vui lòng liên hệ tới quản trị viên.");
+                }
+            }
         } finally {
             setLoading(false);
         }
         navigate(`/test/${examId}/result`);
     }
+    console.log(result)
+
   return (
     <Dialog open={open} onClose={handleClose}>
         <DialogTitle>

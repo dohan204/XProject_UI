@@ -1,3 +1,3 @@
-export const handleSubmit = () => {
+export const handleSubmit = (data: {}) => {
     
 }

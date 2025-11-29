@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Paper, Typography } from '@mui/material'
+import { Alert, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Paper, Snackbar, Typography, type SnackbarCloseReason } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
@@ -6,9 +6,14 @@ import { type Exam } from '../../../model/apiResponse/ExamDetails';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookIcon from '@mui/icons-material/Book';
 import axios from 'axios';
+import { useAuth } from '../../../context/AuthContext';
+import type { Favorite } from '../../../model/examtest/FavoriteExam';
 export default function ExamPHP() {
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [exam, setExam] = useState<Exam[]>([]);
+    const [openSnakbar, setOpenSnakbar] = useState<boolean>(false);
+    // const [examId, setExamId] = useState<number>(0);
     const [loading, setLoading] = useState<boolean>(false);
     const { code } = useParams()
     const [page, setPage] = useState<number>(0);
@@ -38,6 +43,30 @@ export default function ExamPHP() {
     }, [code])
     const handlePrevouis = () => {
         navigate(-1)
+    }
+
+    const handleSubmitFavorite = (id: number) => {
+        setOpenSnakbar(true)
+        console.log(id)
+        const payload = {
+            accountId: user?.nameid,
+            examId: id
+        };
+        console.log(payload);
+        try {
+            axios.post('http://localhost:8089/api/Exam/FavoriteExam', payload)
+            console.log('them vào danh sách yêu thích thành công.');
+        } catch (err) {
+            console.error("lỗi khi thực hiện.", err)
+        } finally {
+
+        }
+    }
+    const handleCloseSnakBar = (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+        if(reason === 'clickaway'){
+            return;
+        }
+        setOpenSnakbar(false);
     }
     // thực hiện lưu lại đáp án vào localStorage
     return (
@@ -89,7 +118,7 @@ export default function ExamPHP() {
                                 }}
                             >
                                 <Typography fontSize={30} >
-                                    Quay lai    
+                                    Quay lai
                                 </Typography>
                                 <ArrowForwardIcon sx={{ fontSize: 30 }} />
                             </Box>
@@ -102,7 +131,7 @@ export default function ExamPHP() {
                 >
                     {loading ? <Alert severity='success'>Dang tai du lieu...</Alert>
                         : visible.map((e) => (
-                            <Box width={'20%'} height={'100%'} key={e.id}>
+                            <Box width={'20%'} height={'auto'} key={e.id}>
                                 <Card sx={{
                                     width: '100%',
                                     height: '100%'
@@ -120,16 +149,34 @@ export default function ExamPHP() {
                                         </Typography>
                                     </CardContent>
                                     <CardActions>
-                                        <Button size='small' onClick={() => navigate(`/test/${e.id}`)
-                                        }>
-                                            Làm bài
-                                        </Button>
-                                        <IconButton>
-                                            <FavoriteIcon />
-                                        </IconButton>
-                                        <IconButton>
-                                            <BookIcon />
-                                        </IconButton>
+                                        <Box display={'flex'} flexDirection={'row'} alignItems={'center'}>
+                                            <Box display={'flex'} width={'50%'} alignContent={'flex-start'}>
+                                                <Button size='small' onClick={() => navigate(`/test/${e.id}`)
+                                                }>
+                                                    Làm bài
+                                                </Button>
+                                            </Box>
+                                            <Box display={'flex'} justifyContent={'flex-end'} width={'100%'}>
+                                                <IconButton onClick={() => handleSubmitFavorite(e.id)}
+                                                        sx={{
+                                                            '&:active, &:hover' : {
+                                                                backgroundColor: 'pink',
+                                                            }
+                                                        }}
+                                                    >
+                                                    <FavoriteIcon />
+                                                </IconButton>
+                                                <Snackbar
+                                                    open={openSnakbar}
+                                                    autoHideDuration={1500}
+                                                    onClose={handleCloseSnakBar}
+                                                    message="Đã thêm vào danh sách yêu thích."
+                                                />
+                                                <IconButton>
+                                                    <BookIcon />
+                                                </IconButton>
+                                            </Box>
+                                        </Box>
                                     </CardActions>
                                 </Card>
                             </Box>

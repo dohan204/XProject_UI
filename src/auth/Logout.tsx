@@ -18,6 +18,7 @@ export default function Logout({open, handleClose} : LogoutProps){
             // Luôn xóa token dù API thành công hay thất bại
             localStorage.removeItem('token');
             localStorage.removeItem('tokenUser')
+            localStorage.removeItem('user')
             // (Tùy chọn) Xóa các thứ khác nếu có
             // localStorage.removeItem('user');
             // sessionStorage.clear();
@@ -31,7 +32,7 @@ export default function Logout({open, handleClose} : LogoutProps){
     };
     return <Dialog open={open}>
         <DialogTitle>
-            <Typography component={'h3'} variant="h3" color="error">
+            <Typography color="error">
                 Đăng xuất tài khoản
             </Typography>
         </DialogTitle>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Login from './auth/login_register/Login'
 import Register from './auth/login_register/Register'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Router, Routes } from 'react-router-dom'
 import AuthLayout from './auth/login_register/AuthLayout'
 import './App.css'
 import ProtectedRoute from './layout/route/ProtectedRoute'
@@ -17,6 +17,7 @@ import TestFree from './pages/publicPage/Homepage/TestFree'
 import TestPage from './pages/protectedPage/subjectExam/TestPage'
 import Exam from './pages/protectedPage/subjectExam/Exam'
 import TestResult from './pages/protectedPage/subjectExam/TestResult'
+import Profile from './pages/protectedPage/user/Profile'
 // import ExamMsSql from './pages/protectedPage/subjectExam/ExamMsSql'
 function App() {
   return (
@@ -41,11 +42,10 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
           <Route path="/test/:id" element={<TestPage />}>
-            
           </Route>
           <Route path='/test/:id/result' element={<TestResult />} />
           <Route path="/subject/:code" element={<Exam />} />
-
+          <Route path='/profile' element={<Profile />} />
           {/* <Route path="/subject/:code" element={<ExamMsSql />} /> */}
         </Route>
       </Route>

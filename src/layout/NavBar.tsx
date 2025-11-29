@@ -15,15 +15,18 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Logout from "../auth/Logout";
-import Profile from "../pages/user/Profile";
+// import Profile from "../pages/protectedPage/user/Profile";
 import { ButtonGroup } from "@mui/material";
 import styles from '../css/layout.module.css'
+import { useAuth } from '../context/AuthContext';
 export default function NavBar() {
+    const {user} = useAuth();
+    console.log('using useContext', user)
     const navigate = useNavigate()
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const [openLogout, setOpenLogout] = useState<boolean>(false)
-    const [openProfile, setOpenProfile] = useState<boolean>(false)
+    // const [openProfile, setOpenProfile] = useState<boolean>(false)
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
@@ -40,9 +43,9 @@ export default function NavBar() {
     };
     const handleOpenLogout = () => setOpenLogout(true)
     const handleCloseLogout = () => setOpenLogout(false)
-    const handleOpenProfile = () => setOpenProfile(true)
-    const handleCloseProfile = () => setOpenProfile(false)
-
+    const handleNextRouterProfile = () => {
+        navigate('/profile', {replace: false});
+    }
     // khi người dùng đăng nhập, sẽ có token
     // và hiện giờ token đang được lưu ở localStorage, nên mình sẽ lấy từ đó ra để kiểm tra
     // nếu có thì là người dùng đã đăng nhập còn nếu không thì là chưa
@@ -182,7 +185,7 @@ export default function NavBar() {
                                 ,alignItems: 'center'
                             }}>
                                 <Typography sx={{p: 2}}>
-                                    Xin chào
+                                    {user ? `Chào mừng ${user.fullName}` : 'đăng nhập đi...'}
                                 </Typography>
                                 <Tooltip title="Open settings">
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -205,7 +208,7 @@ export default function NavBar() {
                                     open={Boolean(anchorElUser)}
                                     onClose={handleCloseUserMenu}
                                 >
-                                    <MenuItem onClick={handleOpenProfile}>
+                                    <MenuItem onClick={handleNextRouterProfile}>
                                         <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
                                     </MenuItem>
                                     <MenuItem onClick={handleCloseUserMenu}>
@@ -226,7 +229,6 @@ export default function NavBar() {
                 </Container>
             </AppBar>
             <Logout open={openLogout} handleClose={handleCloseLogout} />
-            <Profile open={openProfile} handleClose={handleCloseProfile} />
         </div>
     )
 }
