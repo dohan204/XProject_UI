@@ -74,11 +74,11 @@ export default function ModifiedInfo({open, handleClose}: PropsOpenModifiedUser)
                 </Box> 
             </DialogContent>
             <DialogActions>
-                <Button color='success' variant='contained'
+                {/* <Button color='success' variant='contained'
                     onClick={handleClickSubmitTabs}
                 >
                     Thay đổi
-                </Button>
+                </Button> */}
                 <Button onClick={handleClose}>
                     Đóng
                 </Button>

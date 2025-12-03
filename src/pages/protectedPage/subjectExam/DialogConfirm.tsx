@@ -7,7 +7,7 @@ interface props {
     handleClose: () => void,
     examId?: number
 }
-interface responseApi {
+export interface responseApi {
     totalQuestions: number,
     correctAnswers: number,
     wrongAnswers: number,
@@ -35,6 +35,9 @@ export default function DialogConfirm({open, handleClose, examId}: props) {
             })
             const res = JSON.stringify(result.data)
             localStorage.setItem('resultExam', res);
+
+            sessionStorage.removeItem('examStart');
+
             // setResult(res);
         } catch (errr) {
             if(axios.isAxiosError(errr)){
@@ -44,6 +47,7 @@ export default function DialogConfirm({open, handleClose, examId}: props) {
             }
         } finally {
             setLoading(false);
+            localStorage.removeItem('exam');
         }
         navigate(`/test/${examId}/result`);
     }

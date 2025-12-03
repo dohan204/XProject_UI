@@ -1,37 +1,72 @@
-import { setSeconds } from 'date-fns'
 import React, { useState, useEffect } from 'react'
-export interface Time {
-    time: number | undefined
+
+interface TimeProps {
+    time: number | undefined   // phút
 }
-export default function TimeDown({ time }: Time) {
-    const [ms, setMs] = useState<number>(0)
-    // const [done, setDone] = useState<boolean>(false)
-    // console.log('giá trị hiện tại của time là: ', ms);
+
+export default function TimeDown({ time }: TimeProps) {
+
+    const [ms, setMs] = useState<number>(0);
+
     const formatTime = (seconds: number) => {
-        const m = Math.floor(seconds / 60)
+        const m = Math.floor(seconds / 60);
         const s = seconds % 60;
-        return `${m.toString().padStart(2, '0')}: ${s.toString().padStart(2, '0')}`
-    }
-    useEffect(() => {
-        if (time) setMs(time * 60);  // time là phút => đổi qua giây
-    }, [time]);
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    };
 
     useEffect(() => {
-        if(ms <= 0) return; 
-        const time = setInterval(() => {
+        if (!time) return;
+        // chuyển đổi thành giây
+        const totalSeconds = time * 60;
+
+        // lấy giá trị
+        const savedStart = sessionStorage.getItem("examStart");
+
+        if (!savedStart) {
+            // Lần đầu vào bài thi
+            const now = Date.now();
+            // lấy thời điểm hiện tại khi thi
+            sessionStorage.setItem("examStart", now.toString());
+            
+            setMs(totalSeconds);
+        } else {
+            // Tính thời gian còn lại
+            const now = Date.now();
+            const elapsed = Math.floor((now - parseInt(savedStart)) / 1000);
+
+            const remaining = totalSeconds - elapsed;
+
+            if (remaining <= 0) {
+                setMs(0);
+                sessionStorage.removeItem("examStart");
+            } else {
+                setMs(remaining);
+            }
+        }
+
+    }, [time]);
+
+    // Countdown chạy mỗi giây
+    useEffect(() => {
+        if (ms <= 0) return;
+
+        const timer = setInterval(() => {
             setMs(prev => {
-                if (prev < 1) {
-                    clearInterval(time)
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    sessionStorage.removeItem("examStart"); // hết giờ
                     return 0;
                 }
-                return prev - 1
-            })
-        }, 1000)
-        return () => clearInterval(time)
-    }, [ms])
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [ms]);
+
     return (
-       <div>
-        {formatTime(ms)}
-       </div>
-    )
+        <div style={{ fontSize: "24px", fontWeight: "bold" }}>
+            {formatTime(ms)}
+        </div>
+    );
 }
