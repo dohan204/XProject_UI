@@ -23,9 +23,9 @@ function App() {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path='/' element={<HomePage />}>
-        </Route>
+        <Route path='/' element={<HomePage />}></Route>
         <Route path='/freetest' element={<TestFree openTest />} />
+        <Route path='/freetest/:id/result' element={<TestResult />} />
         <Route path='/about' element={<About />} />
         <Route path='/feature' element={<Feature />} />
         <Route path='/news' element={<News />} />

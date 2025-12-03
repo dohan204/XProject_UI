@@ -1,67 +1,40 @@
 import { Box, Card, CardContent, Grid, List, Paper, Typography } from "@mui/material";
-import AddTaskIcon from '@mui/icons-material/AddTask';
-import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
+
+const feature = [
+    { id: 1, name: 'Tạo đề' },
+    { id: 2, name: 'Tổ chức thi' },
+    { id: 3, name: 'Chống gian lận' },
+    { id: 4, name: 'Báo cáo' },
+    { id: 5, name: 'Quản lý' }
+]
+
 export default function Feature() {
     return (
         <Box display={'flex'} position={'relative'} flexDirection={'column'}>
             <Box display={'flex'} width={'96vw'} height={'50vh'} flexDirection={'column'}>
                 <Box height={'20%'} width={'100%'}>
-                    <Typography component={'h3'} variant="h3">Danh sách các chức năng nổi bật</Typography>
+                    <Typography component={'h3'} variant="h3">Chức năng</Typography>
                 </Box>
                 <Box width={'100%'} height={'80%'} p={1} m={2}>
                     <Grid width={'100%'} height={'100%'} container columns={20} spacing={3}>
-                        <Grid size={4} bgcolor={'lightblue'}>
-                            <Card sx={{ width: '100%', height: '100%' }}>
-                                <CardContent>
-                                    <Typography component={'h3'} variant="h3">
-                                        Tạo đề
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid size={4} bgcolor={'lightblue'}>
-                            <Card sx={{ width: '100%', height: '100%' }}>
-                                <CardContent>
-                                    <Typography component={'h3'} variant="h3">
-                                        Tổ chức thi
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid size={4} bgcolor={'lightblue'}>
-                            <Card sx={{ width: '100%', height: '100%' }}>
-                                <CardContent>
-                                    <Typography component={'h3'} variant="h3">
-                                        Chống gian lận
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid size={4} bgcolor={'lightblue'}>
-                            <Card sx={{ width: '100%', height: '100%' }}>
-                                <CardContent>
-                                    <Typography component={'h3'} variant="h3">
-                                        Báo cáo
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid size={4} bgcolor={'lightblue'}>
-                            <Card sx={{ width: '100%', height: '100%' }}>
-                                <CardContent>
-                                    <Typography component={'h3'} variant="h3">
-                                        Quản lý
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                        </Grid>
+                        {feature.map((f) => (
+                            <Grid size={4} bgcolor={'lightblue'} key={f.id}>
+                                <Card sx={{ width: '100%', height: '100%' }}>
+                                    <CardContent>
+                                        <Typography component={'h3'} variant="h3">
+                                            {f.name}
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
                     </Grid>
                 </Box>
             </Box>
             <Box width={'96vw'} height={'20vh'} justifyContent={'center'} alignContent={'center'}>
                 <Typography sx={{ p: 3 }} component={'h2'} variant="h2">Chi tiết các tính năng chính: </Typography>
             </Box>
-            <Box width={'96vw'} height={'180vh'} display={'flex'} flexDirection={'column'} p={1}>
+            <Box width={'96vw'} height={'auto'} display={'flex'} flexDirection={'column'} p={1}>
                 <Box width={'100%'} height={'19%'} p={1} m={2} component={Paper}>
                     <Box height={'25%'} >
                         <Typography component={'h4'} variant="h4" sx={{ pl: 10 }}>

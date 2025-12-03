@@ -6,6 +6,9 @@ import { Box, Button, Paper, Table, TableBody, TableCell, TableContainer, TableH
 import { useNavigate } from "react-router-dom";
 import ModifiedInfo from "./ModifiedInfo";
 import FavoriteExam from "./FavoriteExam";
+import EditNoteIcon from '@mui/icons-material/EditNote';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 // import {Backdrop, CircularProgress} from "@mui/material";
 import InfoDetails from "./InfoDetails";
 import HistoryExamWithUser from "./HistoryExamWithUser";
@@ -50,13 +53,16 @@ export default function Profile() {
         <Box width={'98vw'} height={'auto'} m={1} display={'flex'} flexDirection={'column'}
             sx={{ xs: 4, md: 8 }}
         >
-            <Box height={'15%'} bgcolor={'lightcoral'} p={1} width={'100%'}
+            <Box height={'15%'} p={1} width={'100%'}
                 display={'flex'} flexDirection={'row'} justifyContent={"space-around"}
             >
                 <Box height={'100%'} width={'49%'} bgcolor={'lightcyan'}
                     display={'flex'} justifyContent={'flex-start'} alignItems={'center'}
                 >
                     <Button
+                        startIcon={
+                            <ArrowBackIcon />
+                        }
                         variant="contained"
                         color='success'
                         size="large"
@@ -79,6 +85,9 @@ export default function Profile() {
                     display={'flex'} justifyContent={'flex-end'} alignItems={'center'}
                 >
                     <Button variant="contained"
+                        startIcon={
+                            <EditNoteIcon />
+                        }
                         color='success'
                         size="large"
                         sx={{
@@ -91,6 +100,9 @@ export default function Profile() {
                         onClick={handleOpenModified}
                     >Chỉnh sửa thông tin</Button>
                     <Button variant="contained"
+                        startIcon={
+                            <ViewHeadlineIcon />
+                        }
                         color='success'
                         size="large"
                         sx={{
@@ -101,94 +113,7 @@ export default function Profile() {
                             }
                         }}
                         onClick={handleOpenDetails}
-                    >Xem thông tin chi tiết</Button>
-                </Box>
-            </Box>
-            <Box width={'100%'} height={'auto'} p={1} bgcolor={'lightgray'}>
-                <Box height={'20%'} bgcolor={'lightgreen'} p={1}>
-                    <Typography variant="h4" >
-                        Lớp học hiện tại
-                    </Typography>
-                </Box>
-                <Box height={'80%'} bgcolor={'lightgrey'} width={'100%'}>
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Id</TableCell>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>
-                                        grade level
-                                    </TableCell>
-                                    <TableCell>School(University/College)</TableCell>
-                                    <TableCell>SchoolCode</TableCell>
-                                    <TableCell>Address</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>
-                                        1
-                                    </TableCell>
-                                    <TableCell>
-                                        cnt23432
-                                    </TableCell>
-                                    <TableCell>
-                                        University
-                                    </TableCell>
-                                    <TableCell>
-                                        Hanoi University of Science and Technology
-                                    </TableCell>
-                                    <TableCell>
-                                        Hust
-                                    </TableCell>
-                                    <TableCell>
-                                        Hà nội
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        1
-                                    </TableCell>
-                                    <TableCell>
-                                        cnt23432
-                                    </TableCell>
-                                    <TableCell>
-                                        University
-                                    </TableCell>
-                                    <TableCell>
-                                        Hanoi University of Science and Technology
-                                    </TableCell>
-                                    <TableCell>
-                                        Hust
-                                    </TableCell>
-                                    <TableCell>
-                                        Hà nội
-                                    </TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>
-                                        1
-                                    </TableCell>
-                                    <TableCell>
-                                        cnt23432
-                                    </TableCell>
-                                    <TableCell>
-                                        University
-                                    </TableCell>
-                                    <TableCell>
-                                        Hanoi University of Science and Technology
-                                    </TableCell>
-                                    <TableCell>
-                                        Hust
-                                    </TableCell>
-                                    <TableCell>
-                                        Hà nội
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    >thông tin chi tiết</Button>
                 </Box>
             </Box>
             <Box height={'auto'} width={'100%'} component={Paper} p={1}>

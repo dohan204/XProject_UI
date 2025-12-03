@@ -1,53 +1,38 @@
-import { Avatar, Box, Button, Card, CardActionArea, CardActions, CardContent, CardHeader, CardMedia, Grid, IconButton, Typography } from "@mui/material";
-import background from '../../assets/backgroud2.jpg'
+import { Avatar, Box, Button, Card, CardActionArea, CardContent, CardHeader, CardMedia, Dialog, Grid, IconButton, Paper, Typography } from "@mui/material";
 import background2 from '../../assets/dongLucp1.jpg'
-import AndroidIcon from '@mui/icons-material/Android';
-import ContactSupportIcon from '@mui/icons-material/ContactSupport';
-import MiscellaneousServicesIcon from '@mui/icons-material/MiscellaneousServices';
-import AttractionsIcon from '@mui/icons-material/Attractions';
-import PersonIcon from '@mui/icons-material/Person';
-import SubjectIcon from '@mui/icons-material/Subject';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import AssuredWorkloadIcon from '@mui/icons-material/AssuredWorkload';
-import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { useEffect, useState } from "react";
-// import TestFree from "./Homepage/TestFree";
 import DialogStart from "./Homepage/DialogStart";
 import StartPractice from "./Homepage/StartPractice";
-// import { Outlet } from "react-router-dom";
 import html_css from '../../assets/html-css.png'
-// import cSharp from '../../assets/c#.png'
-import { motion } from 'framer-motion';
 import { useNavigate } from "react-router-dom";
 import { type Subject } from "../../model/apiResponse/Subject";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
 import ViewExamSubject from "../generic/ViewExamSubject";
+import DifferentSubject from "./Homepage/DifferentSubject";
+import { useAuth } from "../../context/AuthContext";
+import HomeTopPage from "./Homepage/HomeTopPage";
+import HomepageMiddleTop from "./Homepage/HomepageMiddleTop";
+import HomepageAbout from "./Homepage/HomepageAbout";
 export default function HomePage() {
   const navigate = useNavigate()
-  const [account, setAccount] = useState<number>(0);
-  const [question, setQuestion] = useState<number>(0);
-  const [exam, setExam] = useState<number>(0);
+  const {user} = useAuth();
   const [codeSubject, setCodeSubject] = useState<string>('');
   const [subjects, setSubject] = useState<Subject[]>([])
   const [loading, setLoading] = useState<boolean>(false);
-  const [openStart, setOpenStart] = useState<boolean>(false)
+  const [openStartFree, setOpenStartFree] = useState<boolean>(false)
   const [openStartPractice, setOpenStartPractice] = useState<boolean>(false);
-  const handleOpenStart = () => setOpenStart(true)
-  const handleCloseStart = () => setOpenStart(false)
+  const [openTest, setOpenTest] = useState<boolean>(false);
+  const handleCloseTest = () => setOpenTest(false)
+  const handleOpenStart = () => setOpenStartFree(true)
+  const handleCloseStart = () => setOpenStartFree(false)
 
   const handleClosePractice = () => setOpenStartPractice(false);
-
-
-  // const tokenUser = localStorage.getItem('tokenUser')
+  const token = user?.nameid;
+  console.log(token)
   const handleStartLogon = () => {
-    setOpenStartPractice(true)
-    // if(!tokenUser){
-    //   return <StartPractice open={openStartPractice} handleClose={handleClosePractice} />
-    // } 
-    // return <Excersice />
+    setOpenTest(true)
   }
   const handleClickSubject = (code: string) => {
     setCodeSubject(code)
@@ -60,17 +45,12 @@ export default function HomePage() {
   const getAllDataFromApi = async () => {
     setLoading(true);
     try {
-      const [account, question, exam, subjects] =
+      const [subjects] =
         await Promise.all(
-          [axios.get('http://localhost:8089/api/Account/count'),
-          axios.get('http://localhost:8089/api/Exam/countExam'),
-          axios.get('http://localhost:8089/api/Question/countQuestion'),
+          [
           axios.get('http://localhost:8089/api/Subject/subjects')
           ])
       console.log('lấy dữ liệu thành công.')
-      setAccount(account.data);
-      setQuestion(question.data);
-      setExam(exam.data);
       setSubject(subjects.data);
     } catch (err) {
       console.error('lỗi,', err)
@@ -85,349 +65,13 @@ export default function HomePage() {
   
   return <Box
     display={'flex'}
-    pl={1}
     width={'98vw'}
-    position={'relative'}
+    // position={'relative'}
     flexDirection={'column'}
   >
-    <Box
-      sx={{
-        width: '99vw',
-        height: '90vh',
-        backgroundImage: `url(${background})`,
-        backgroundAttachment: 'fixed',
-        backgroundRepeat: 'no-repeat'
-      }}
-    >
-      <Grid container spacing={3}
-        display={'flex'} flexDirection={'row'}
-        justifyContent={'space-around'}
-        width={'100%'} bgcolor={'lightblue'} height={'100%'}>
-        <Grid width={'36%'} bgcolor={'transparent'}>
-          <Grid width={'100%'} height={'32%'} bgcolor={'transparent'}>
-          </Grid>
-          <Grid height={'68%'} bgcolor={'transparent'}>
-            <motion.div
-              initial={{ y: -60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 1.5, ease: 'easeIn' }}
-            >
-              <Box sx={{ pl: 7 }}>
-                <Typography component={'h3'} variant="h3">
-                  Test preparation that makes a difference
-                </Typography>
-                <Typography component={'h5'} variant="h5">
-                  Prepare with us – Pass your test – Get the job
-                </Typography>
-                <Box>
-                  <Button size="large"
-                    color="secondary"
-                    variant="contained"
-                    sx={{
-                      outline: 'none',
-                      '&:focus': {
-                        outline: 'none'
-                      }
-                    }}
-                    onClick={handleOpenStart}>
-                    Start Free Test
-                  </Button>
-                </Box>
-              </Box>
-            </motion.div>
-          </Grid>
-        </Grid>
-        <Grid width={'25%'} bgcolor={'transparent'}>
-        </Grid>
-        <Grid width={'32%'}>
-          <Grid width={'100%'} height={'70%'}>
-            <Grid width={'100%'} height={'30%'}>
-
-            </Grid>
-            <Grid width={'100%'} height={'70%'}>
-              <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{
-                  duration: 1, ease: 'easeOut'
-                }}
-              >
-                <Card sx={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}>
-                  <CardContent>
-                    <Typography component={'h2'} variant="h2">
-                      Luyện tập
-                    </Typography>
-                    <Typography component={'h6'} variant="h6">
-                      Chúng tôi giúp bạn trở nên vip hơn.
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="large" variant="contained" color="success"
-                      sx={{
-                        outline: 'none',
-                        '&:focus': {
-                          outline: 'none'
-                        }
-                      }}
-                      onClick={handleStartLogon}
-                    >
-                      Tham gia tại đây
-                    </Button>
-                  </CardActions>
-                </Card>
-              </motion.div>
-            </Grid>
-          </Grid>
-          <Grid></Grid>
-          <Grid></Grid>
-        </Grid>
-      </Grid>
-    </Box>
-    <Box width={'99vw'} height={'30vh'} bgcolor={'lightseagreen'}
-      display={'flex'}
-      justifyContent={'space-around'}
-      alignContent={'center'}
-      alignItems={'center'}
-    >
-      <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
-        component={'button'} onClick={() => alert('như cặc')}
-        sx={{
-          outline: 'none',
-          '&:focus': {
-            outline: 'none'
-          },
-          '&:hover': {
-            backgroundColor: 'lightgray',
-            transition: '0.2s linear',
-            transform: 'scale(1.2,1.2)',
-            borderColor: 'none',
-            outline: 'none'
-          },
-          '&:not(:hover)': {
-            transition: '0.5s'
-          }
-
-        }}
-      >
-        <AndroidIcon sx={{ fontSize: 100 }} />
-      </Box>
-      <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
-        component={'button'} onClick={() => alert('như cặc')}
-        sx={{
-          outline: 'none',
-          '&:focus': {
-            outline: 'none'
-          },
-          '&:hover': {
-            backgroundColor: 'lightgray',
-            transition: '0.2s linear',
-            transform: 'scale(1.2,1.2)',
-            borderColor: 'none',
-            outline: 'none'
-          },
-          '&:not(:hover)': {
-            transition: '0.5s'
-          }
-        }}
-      >
-        <ContactSupportIcon sx={{ fontSize: 100 }} />
-      </Box>
-      <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
-        component={'button'} onClick={() => alert('như cặc')}
-        sx={{
-          outline: 'none',
-          '&:focus': {
-            outline: 'none'
-          },
-          '&:hover': {
-            backgroundColor: 'lightgray',
-            transition: '0.2s linear',
-            transform: 'scale(1.2,1.2)',
-            borderColor: 'none',
-            outline: 'none'
-          },
-          '&:not(:hover)': {
-            transition: '0.5s'
-          }
-        }}
-      >
-        <AttractionsIcon sx={{ fontSize: 100 }} />
-      </Box>
-      <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
-        component={'button'} onClick={() => alert('như cặc')}
-        sx={{
-          outline: 'none',
-          '&:focus': {
-            outline: 'none'
-          },
-          '&:hover': {
-            backgroundColor: 'lightgray',
-            transition: '0.2s linear',
-            transform: 'scale(1.2,1.2)',
-            borderColor: 'none',
-            outline: 'none'
-          },
-          '&:not(:hover)': {
-            transition: '0.5s'
-          }
-        }}
-      >
-        <BorderColorIcon sx={{ fontSize: 100 }} />
-      </Box>
-      <Box width={'15%'} display={'flex'} alignItems={'center'} justifyContent={'center'}
-        component={'button'} onClick={() => alert('như cặc')}
-        sx={{
-          outline: 'none',
-          '&:focus': {
-            outline: 'none'
-          },
-          '&:hover': {
-            backgroundColor: 'lightgray',
-            transition: '0.2s linear',
-            transform: 'scale(1.2,1.2)',
-            borderColor: 'none',
-            outline: 'none'
-          },
-          '&:not(:hover)': {
-            transition: '0.5s'
-          }
-        }}
-      >
-        <MiscellaneousServicesIcon sx={{ fontSize: 100 }} />
-      </Box>
-    </Box>
-    <Box width={'99vw'} height={'85vh'}>
-      <Grid container width={'100%'} height={'100%'}
-        display={'flex'}
-        flexDirection={'row'}
-      >
-        <Grid size={3}>
-        </Grid>
-        <Grid size={6}>
-          <Box width={'100%'} height={'100%'}
-            display={'flex'} justifyContent={'center'} flexDirection={'column'}
-            alignItems={'center'}
-          >
-            <Box>
-              <Typography component={'h3'} variant="h3" pl={5}>
-                Chuẩn bị cho bài kiểm tra năng khiếu
-              </Typography>
-            </Box>
-            <Box p={5}>
-              <Typography>
-                Giải phóng tiềm năng của bạn: Vượt qua bài kiểm tra năng khiếu nhân viên hoặc kỳ thi tuyển sinh vào trường một cách dễ dàng với các bài kiểm tra thực hành trực tuyến được thiết kế riêng của chúng tôi.
-              </Typography>
-              <Typography>
-                Hãy luyện tập với một trong các bài kiểm tra năng khiếu miễn phí của chúng tôi, hoặc nâng cao trình độ của bạn với các gói luyện thi toàn diện. Đăng ký ngay và bắt đầu chuẩn bị ngay hôm nay.
-              </Typography>
-            </Box>
-            <Typography sx={{ pb: 2 }}>
-              Want to try a free aptitude test? Try our free Cognitive Ability Test.
-            </Typography>
-            <Box>
-              <Button color="success" variant="contained">
-                Free Cognitive Ability Test
-              </Button>
-            </Box>
-          </Box>
-        </Grid>
-        <Grid size={3}>
-        </Grid>
-      </Grid>
-    </Box>
-    <motion.div
-    >
-      <Box width={'99vw'} height={'40vh'} mt={1}>
-        <Grid container spacing={3}
-          width={'100%'} display={'flex'} flexDirection={'row'}
-          height={'100%'}
-          columns={24}>
-          <Grid size={2}></Grid>
-          <Grid size={5} bgcolor={'lightgreen'}>
-            <Card sx={{ width: '100%', height: '100%', backgroundColor: 'lightpink' }}  >
-              <CardHeader
-                avatar={
-                  <Avatar>
-                    <SupportAgentIcon />
-                  </Avatar>
-                }
-              />
-              <CardContent>
-                <Typography>
-                  Hỗ trợ online 24/7
-                </Typography>
-                <Typography>
-
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={5} bgcolor={'lightcyan'}>
-            <Card sx={{ width: '100%', height: '100%' }}>
-              <CardHeader
-                avatar={
-                  <Avatar>
-                    <PersonIcon />
-                  </Avatar>
-                }
-                title='Người dùng'
-                subheader
-              >
-              </CardHeader>
-              <CardContent>
-                <Typography>
-                  Số người dùng hiện tại
-                </Typography>
-                <Typography variant="h4" component={'h4'}>
-                  {account}+
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={5} bgcolor={'lightgoldenrodyellow'}>
-            <Card sx={{ width: '100%', height: '100%' }}>
-              <CardHeader
-                avatar={
-                  <Avatar>
-                    <AssuredWorkloadIcon />
-                  </Avatar>
-                }
-                title='Ngân hàng câu hỏi'
-              />
-              <CardContent>
-                <Typography>
-                  Câu hỏi đươc cập nhật mới theo ngày
-                </Typography>
-                <Typography component={'h4'} variant="h4">
-                  {question}+
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={5} bgcolor={'lightpink'}>
-            <Card sx={{ width: '100%', height: '100%' }}>
-              <CardHeader
-                avatar={
-                  <Avatar>
-                    <SubjectIcon />
-                  </Avatar>
-                }
-                title='Số lượng đề thi'
-              />
-              <CardContent>
-                <Typography>
-                  Số lượng đề thi
-                </Typography>
-                <Typography component={'h4'} variant="h4">
-                  {exam}+
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid size={2}></Grid>
-        </Grid>
-      </Box>
-    </motion.div>
+    <HomeTopPage openInlogin={handleStartLogon} openOutlogin={handleOpenStart} />
+    <HomepageMiddleTop />
+    <HomepageAbout />
     <Box width={'99vw'} height={'20vh'} mt={2}>
       <Grid container width={'100%'} height={'100%'}>
         <Grid size={3}></Grid>
@@ -444,7 +88,7 @@ export default function HomePage() {
               Thực hành theo môn
             </Typography>
             <Typography>
-              Tìm môn thi phù hợp với nhu cầu của bạn, chọn môn thi ở phía dưới.
+              Lựa chọn các môn phù hợp với bạn ở phía dưới để luyện tập
             </Typography>
           </Box>
         </Grid>
@@ -495,22 +139,22 @@ export default function HomePage() {
         {/* <Grid size={2}></Grid> */}
       </Grid>
     </Box>
-    <Box width={'100%'} height={'50vh'} bgcolor={'lightblue'} m={1}>
+    <Box width={'100%'} height={'auto'} component={Paper} m={1}>
       <Box width={'100%'} height={'100%'}>
-        <Box height={'15%'}>
+        <Box height={'auto'} m={2}>
           <Typography variant="h4">
-            Các chủ đề, lĩnh vực khác mà bạn có thể tham khảo
+            Các chủ đề, môn học khác mà bạn có thể tham khảo
           </Typography>
         </Box>
-        <Box height={'85%'} bgcolor={'lightcoral'}>
-
+        <Box height={'auto'}>
+          <DifferentSubject />
         </Box>
       </Box>
     </Box>
-    <Box width={'99vw'} height={'90vh'}>
+    <Box width={'99vw'} height={'50vh'}>
       <Grid container spacing={2}>
         <Grid size={6}>
-          <Box width={'100%'} height={'100%'} p={10}
+          <Box width={'100%'} height={'100%'}
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -548,8 +192,8 @@ export default function HomePage() {
         </Grid>
       </Grid>
     </Box>
-    <DialogStart open={openStart} handleClose={handleCloseStart} />
-    <StartPractice open={openStartPractice} handleClose={handleClosePractice} />
+    <DialogStart open={openStartFree} handleClose={handleCloseStart} />
+    <StartPractice open={openTest} handleClose={handleCloseTest} />
     <ViewExamSubject open={openStartPractice} handleClose={handleClosePractice} code={codeSubject} />
   </Box>
 }

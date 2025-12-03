@@ -24,7 +24,8 @@ export default function Logout({open, handleClose} : LogoutProps){
             // sessionStorage.clear();
 
             // Redirect về login (nếu dùng React Router)
-            navigate('/login');
+            navigate('/');
+            handleClose();
             // hoặc
             // window.location.href = '/login';
             setLoading(false)

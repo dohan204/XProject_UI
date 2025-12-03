@@ -3,26 +3,8 @@ import React from 'react'
 // import { da } from 'date-fns/locale';
 import { PieChart } from '@mui/x-charts'
 export const valueFormatter = (item: { value: number }) => `${item.value}%`;
-// interface DisplayCorrect {
-//   isCorrectAnswer: number | undefined,
-//   score: number | undefined
-// }
-// interface DisplayWrong {
-//   isWrong: number | undefined,
-//   score: number | undefined
-// }
 export default function TestResult() {
-  // const data = localStorage.getItem('resultExam')
-  // const result = JSON.stringify(data)
   const result2 = JSON.parse(localStorage.getItem('resultExam') ?? '{}');
-  // const resultCorrect: DisplayCorrect = {
-  //   isCorrectAnswer: result2?.correctAnswers,
-  //   score: result2?.score
-  // }
-  // const resultWrong: DisplayWrong = {
-  //   isWrong: result2?.wrongAnswers,
-  //   score: result2?.score
-  // }
   const dataDisplay = [
     {
       id: 0,

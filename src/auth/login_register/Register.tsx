@@ -5,10 +5,10 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import type { RegisterDto } from "../../model/auth/RegisterDto";
 import { type Province } from "../../model/apiResponse/Province";
+import { type WardsCommune } from "../../model/apiResponse/WardsCommune";
 import { useCallback, useEffect, useState } from "react";
 import { format } from 'date-fns';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { type WardsCommune } from "../../model/apiResponse/WardsCommune";
 import axios from "axios";
 import styles from '../../css/authentication.module.css'
 import { useNavigate } from "react-router-dom";

@@ -6,15 +6,15 @@ export default function Footer() {
         <Grid container columns={16} spacing={3} >
             <Grid size={4}>
                 <Box>
-                    <Typography component={'h4'} variant='h4'>Bạn cần hỗ trợ</Typography>
-                    <Typography component={'h4'} variant='h4'>1900 1234</Typography>
-                    <Typography>Địa chỉ: '79/44 Nghia Lo, Ward Yen Nghia, Ha Noi </Typography>
+                    <Typography variant='h5'>Bạn cần hỗ trợ</Typography>
+                    <Typography variant='h5'>1900 1234</Typography>
+                    {/* <Typography>Địa chỉ: '79/44 Nghia Lo, Ward Yen Nghia, Ha Noi </Typography> */}
                     <Typography>Email: dohan2005@gmail.com</Typography>
                 </Box>
             </Grid>
             <Grid size={4}>
                 <Box>
-                    <Typography component={'h4'} variant='h4'>
+                    <Typography variant='h5'>
                         Hướng dẫn sử dụng
                     </Typography>
                     <Typography>
@@ -38,7 +38,7 @@ export default function Footer() {
             </Grid>
             <Grid size={4}>
                 <Box>
-                    <Typography component={'h4'} variant='h4'>
+                    <Typography variant='h5'>
                         Hỗ trợ khách hàng
                     </Typography>
                     <Typography>
@@ -61,7 +61,7 @@ export default function Footer() {
             </Grid>
             <Grid size={4}>
                 <Box>
-                    <Typography component={'h4'} variant='h4'>
+                    <Typography variant='h5'>
                         Mạng xã hội & thông tin bản quền
                     </Typography>
                     <Typography>
@@ -71,7 +71,7 @@ export default function Footer() {
                     <Typography>
                     Youtobe
                     </Typography>
-                    <Typography component={'h4'} variant='h4'>
+                    <Typography variant='h5'>
                         Bản quền
                     </Typography>
                     <Typography>

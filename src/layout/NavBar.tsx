@@ -16,11 +16,14 @@ import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Logout from "../auth/Logout";
 // import Profile from "../pages/protectedPage/user/Profile";
-import { ButtonGroup } from "@mui/material";
+import OutputIcon from '@mui/icons-material/Output';
+import { ButtonGroup, Icon } from "@mui/material";
 import styles from '../css/layout.module.css'
 import { useAuth } from '../context/AuthContext';
+// import MenuUser from './MenuUser';
+// import UserMenu from './UserMenu';
 export default function NavBar() {
-    const {user} = useAuth();
+    const { user } = useAuth();
     console.log('using useContext', user)
     const navigate = useNavigate()
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -44,7 +47,7 @@ export default function NavBar() {
     const handleOpenLogout = () => setOpenLogout(true)
     const handleCloseLogout = () => setOpenLogout(false)
     const handleNextRouterProfile = () => {
-        navigate('/profile', {replace: false});
+        navigate('/profile', { replace: false });
     }
     // khi người dùng đăng nhập, sẽ có token
     // và hiện giờ token đang được lưu ở localStorage, nên mình sẽ lấy từ đó ra để kiểm tra
@@ -63,7 +66,7 @@ export default function NavBar() {
             <AppBar position="fixed" color='secondary'>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+                        <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 , fontSize: '40px'}} />
                         <Typography
                             variant="h6"
                             noWrap
@@ -77,6 +80,7 @@ export default function NavBar() {
                                 letterSpacing: '.3rem',
                                 color: 'inherit',
                                 textDecoration: 'none',
+                                fontSize: '40px'
                             }}
                         >
                             TESTX
@@ -181,10 +185,11 @@ export default function NavBar() {
                             </MenuItem>
                         </Box>
                         {token ? (
-                            <Box sx={{ flexGrow: 0 , display: 'flex', flexDirection: 'row', justifyContent: 'center'
-                                ,alignItems: 'center'
+                            <Box sx={{
+                                flexGrow: 0, display: 'flex', flexDirection: 'row', justifyContent: 'center'
+                                , alignItems: 'center'
                             }}>
-                                <Typography sx={{p: 2}}>
+                                <Typography sx={{ p: 2 }}>
                                     {user ? `Chào mừng ${user.fullName}` : 'đăng nhập đi...'}
                                 </Typography>
                                 <Tooltip title="Open settings">
@@ -209,15 +214,20 @@ export default function NavBar() {
                                     onClose={handleCloseUserMenu}
                                 >
                                     <MenuItem onClick={handleNextRouterProfile}>
+                                        <IconButton> <OutputIcon /></IconButton>
                                         <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
                                     </MenuItem>
                                     <MenuItem onClick={handleCloseUserMenu}>
+                                        <IconButton> <OutputIcon /></IconButton>
                                         <Typography sx={{ textAlign: 'center' }}>Settings</Typography>
                                     </MenuItem>
                                     <MenuItem onClick={handleOpenLogout}>
+                                        <IconButton> <OutputIcon /></IconButton>
                                         <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
                                     </MenuItem>
                                 </Menu>
+                                {/* {/* <MenuUser /> */}
+                                {/* <UserMenu /> */}
                             </Box>
                         ) : (<Box>
                             <ButtonGroup>
