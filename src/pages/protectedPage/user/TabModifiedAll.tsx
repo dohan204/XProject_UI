@@ -126,8 +126,8 @@ export default function TabModifiedAll() {
     return (
         <div>
             <form style={{
-                width: '800px',
-                height: '180px'
+                width: '500px',
+                height: 'auto',
             }} onSubmit={handleSubmit(onSubmitData)}>
                 <Box height={'15%'} bgcolor={'lightblue'}>
                     <Typography>
@@ -141,20 +141,22 @@ export default function TabModifiedAll() {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <Box width={'100%'} height={'90%'}>
                         <Box display={'flex'}
-                            flexDirection={'row'}
+                            flexDirection={'column'}
                             justifyContent={'space-around'}
+                            alignItems={'center'}
+                            p={1}
+                           
                         >
                             <Controller
                                 name='userName'
                                 control={control}
                                 render={({ field }) => (
                                     <TextField
-                                        sx={{
-                                            m: 1
-                                        }}
                                         {...field}
                                         label='Tài khoản'
+                                        sx={{m: 1}}
                                         variant='outlined'
+                                        fullWidth
                                         error={!!errors}
                                         helperText={errors.wardId?.message}
                                     />
@@ -165,12 +167,10 @@ export default function TabModifiedAll() {
                                 control={control}
                                 render={({ field }) => (
                                     <TextField
-                                        sx={{
-                                            m: 1
-                                        }}
                                         {...field}
                                         label='Họ và tên'
                                         variant='outlined'
+                                        fullWidth
                                         error={!!errors}
                                         helperText={errors.wardId?.message}
                                     />
@@ -187,6 +187,7 @@ export default function TabModifiedAll() {
                                         {...field}
                                         label='Tài khoản email'
                                         variant='outlined'
+                                        fullWidth
                                         error={!!errors}
                                         helperText={errors.wardId?.message}
                                     />
@@ -203,14 +204,11 @@ export default function TabModifiedAll() {
                                         onChange={(_, newValue) => (
                                             onChange(newValue?.name || null)
                                         )}
+                                        fullWidth
                                         isOptionEqualToValue={(option, value) => option.name === value.name}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
-                                                sx={{
-                                                    m:1,
-                                                    width: '200px'
-                                                }}
                                                 label='Gender'
                                             />  
                                         )}
@@ -219,9 +217,10 @@ export default function TabModifiedAll() {
                             />
                         </Box>
                         <Box display={'flex'}
-                            flexDirection={'row'}
+                            flexDirection={'column'}
                             justifyContent={'space-around'}
                             alignItems={'center'}
+                            p={1}
                         >
                             <Controller
                                 name='phoneNumber'
@@ -230,8 +229,9 @@ export default function TabModifiedAll() {
                                     <TextField
                                         sx={{
                                             m: 1,
-                                            width: '225px'
+                                
                                         }}
+                                        fullWidth
                                         {...field}
                                         label='Điện thoại'
                                         variant='outlined'
@@ -253,14 +253,14 @@ export default function TabModifiedAll() {
                                             textField: {
                                                 error: !!error,
                                                 helperText: error?.message,
-                                                // fullWidth: true,
+                                                fullWidth: true,
                                                 // margin: "normal", // không cần nếu dùng sx
                                             },
                                         }}
                                         sx={{
                                             m: 1,
-                                             width: '210px'
                                         }}
+                                        
                                     // sx={{ mt: 1, width: '100%' }}
                                     />
                                 )}
@@ -278,6 +278,8 @@ export default function TabModifiedAll() {
                                             setWardsCommune(newValue ? newValue.wardsDto : [])
                                         }}
                                         disabled={wardsCommunes ? false : true}
+                                        fullWidth
+                                        sx={{mb: 1}}
                                         isOptionEqualToValue={(option, value) => option.id === value?.id}
                                         renderInput={(params) => (
                                             <TextField
@@ -286,9 +288,9 @@ export default function TabModifiedAll() {
                                                 label="Tỉnh/thành phố"
                                                 variant="outlined"
                                                 sx={{
-                                                    m: 1,
-                                                    width: '190px'
+                                                    width: '100%'
                                                 }}
+                                                fullWidth
                                             />
                                         )}
                                     />
@@ -305,12 +307,13 @@ export default function TabModifiedAll() {
                                         disabled={!wardsCommunes.length}
                                         onChange={(_, value) => onChange(value?.id ?? 0)}
                                         isOptionEqualToValue={(option, value) => option.id === value.id}
+                                        // sx={{ m: 1}}
+                                        fullWidth
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
-                                                sx={{ m: 1, width: '200px' }}
                                                 variant="outlined"
-
+                                                fullWidth
                                                 label="Phường/Xã"
                                             />
                                         )}

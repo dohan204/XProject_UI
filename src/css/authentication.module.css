@@ -1,10 +1,20 @@
-.form {
-    overflow: hidden;
-}
 .formLogin {
-    animation: rotete 3s infinite;
+    width: 400px;
+    height: 350px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px lightgray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 }
-@keyframes rotete {
-    0% {transform: rotate(0deg);}
-    100% {transform: rotate(360deg);}
+
+.mainLayout {
+    /* background-color: aquamarine; */
+    width: calc(98vw - var(--scrollbar-width, 0px));
+    height: 97dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

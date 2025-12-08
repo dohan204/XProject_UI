@@ -18,7 +18,8 @@ export default function DialogConfirm({open, handleClose, examId}: props) {
     const [loading, setLoading] = useState<boolean>(false);
     const [result, setResult] = useState<responseApi|null>(null);
     const navigate = useNavigate();
-    const exam = localStorage.getItem('exam');
+    const exam = sessionStorage.getItem('exam');
+    console.log(exam , 'Gia stri')
     const handlePostExamToServer = async () => {
         if(exam == null || exam.length === 0){
             console.log('Khong do du lieu can gui di, vui long kiem tra lai')
@@ -27,17 +28,18 @@ export default function DialogConfirm({open, handleClose, examId}: props) {
         const examData = JSON.parse(exam);
         setLoading(true);
         try {
-            var result = await axios.post(`http://localhost:8089/api/Exam/submitExam/${examId}`, examData, {
+            var result = await axios.post(`https://localhost:7151/api/Exam/submitExam/${examId}`, examData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
             })
             const res = JSON.stringify(result.data)
-            localStorage.setItem('resultExam', res);
-
+            sessionStorage.setItem('resultExam', res);
+            sessionStorage.removeItem('exam')
+            // sessionStorage.removeItem('examSave')
+            sessionStorage.removeItem('indexQuestion'); 
             sessionStorage.removeItem('examStart');
-
             // setResult(res);
         } catch (errr) {
             if(axios.isAxiosError(errr)){

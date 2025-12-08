@@ -34,8 +34,8 @@ export default function TabChangPassword() {
   return (
     <div>
         <form style={{
-            width: '800px',
-            height: '180px'
+            width: '500px',
+            height: '220px'
         }} onSubmit={handleSubmit(onSubmitData)}>
             <Typography>
                 {success ? <Alert severity='success'>{message}</Alert> : ''}
@@ -46,7 +46,7 @@ export default function TabChangPassword() {
                         width: '100%',
                         height: '50%',
                         display: 'flex',
-                        flexDirection: 'row',
+                        flexDirection: 'column',
                         justifyContent: 'space-around'
                     }}>
                         <Controller
@@ -55,9 +55,8 @@ export default function TabChangPassword() {
                             render={({field}) => (
                                 <TextField 
                                     {...field}
-                                    sx={{
-                                        width: '40%'
-                                    }}
+                                    sx={{p: 1}}
+                                    fullWidth
                                     label='Mật khẩu hiện tại'
                                     variant='outlined'
                                     error={!!errors}
@@ -70,9 +69,11 @@ export default function TabChangPassword() {
                             control={control}
                             render={({field}) => (
                                 <TextField
-                                sx={{
-                                        width: '40%'
-                                    }}
+                                sx={{p: 1}}
+                                // sx={{
+                                //         width: '40%'
+                                //     }}
+                                fullWidth
                                     {...field}
                                     label='Mật khẩu mới'
                                     variant='outlined'
@@ -81,19 +82,13 @@ export default function TabChangPassword() {
                                 />
                             )}
                         />
-                    </Box>
-                    <Box sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        m: 1,
-                        p: 1
-                    }}>
                         <Controller
                             name='confirmNewPassword'
                             control={control}
                             render={({field}) => (
                                 <TextField
                                     {...field}
+                                    sx={{p: 1}}
                                     fullWidth
                                     label='Xác nhận'
                                     variant='outlined'
@@ -103,6 +98,14 @@ export default function TabChangPassword() {
                             )}
                         />
                     </Box>
+                    {/* <Box sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        m: 1,
+                        p: 1
+                    }}>
+                        
+                    </Box> */}
                 </Box>
             </Box>
             <Button type='submit'variant='contained' size='large'

@@ -33,6 +33,23 @@ export default function FavoriteExam() {
         getFavorite();
     }, [userId, getFavorite])
 
+    const handleDelete = async (id: number) => {
+        setLoading(true)
+        try {
+            await axios.delete(`https://localhost:7151/api/Exam/DeleteFavorite?Id=${id}`)
+            alert('Xóa thành công')
+        } catch (err) {
+            if(axios.isAxiosError(err)){
+                if(err.response?.status === 500){
+                    console.log('lỗi server');
+                } else if (err.response?.status === 404){
+                    console.log('không tìm thấy đề thi..');
+                } else {
+                    console.log('lỗi');
+                }
+            }
+        }
+    }
     return (
         <div>
             <TableContainer>
@@ -45,6 +62,7 @@ export default function FavoriteExam() {
                             <TableCell>Môn thi</TableCell>
                             <TableCell>Số câu hỏi</TableCell>
                             <TableCell>Thời gian làm</TableCell>
+                            <TableCell>Thêm</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -56,6 +74,11 @@ export default function FavoriteExam() {
                                 <TableCell>{favorite.subjectName}</TableCell>
                                 <TableCell>{favorite.questionQuantity}</TableCell>
                                 <TableCell>{favorite.duration}</TableCell>
+                                <TableCell>
+                                    <Button onClick={() => handleDelete(favorite.id)}>
+                                        Xóa
+                                    </Button>
+                                </TableCell>
                             </TableRow>
                         )) : []}
                     </TableBody>

@@ -1,16 +1,32 @@
-import { Box, Card, CardContent, Grid, List, Paper, Typography } from "@mui/material";
-
-const feature = [
-    { id: 1, name: 'Tạo đề' },
-    { id: 2, name: 'Tổ chức thi' },
-    { id: 3, name: 'Chống gian lận' },
-    { id: 4, name: 'Báo cáo' },
-    { id: 5, name: 'Quản lý' }
-]
+import { Box, Card, CardContent, CardMedia, Grid, List, Paper, Typography } from "@mui/material";
+import createExam from '../../assets/createExam.png'
+import exam from '../../assets/Exam.png';
+import cheat from '../../assets/chonggianlan.png'
+import report from '../../assets/Report.png';
+import management from '../../assets/management.png'
+import { useState } from "react";
+import { motion } from 'framer-motion'
 
 export default function Feature() {
+
+    const [hoverCreate, setHoverAll] = useState<boolean>(false)
+    // const [hoverExam, setHoverExam] = useState<boolean>(false)
+    // const [hoverCheat, setHoverCheat] = useState<boolean>(false)
+    // const [hoverReport, setHoverReport] = useState<boolean>(false)
+    // const [hoverManager, setHoverManager] = useState<boolean>(false)
+    const handleHover = () => {
+        setHoverAll(true)
+        // alert('hello')
+    }
+    const feature = [
+        { id: 1, name: 'Tạo đề', img: createExam, content: '+ Nhanh chóng - hiệu quả', content2: '+ Tối ưu thời gian', content3: '+ Soạn đề thông minh' },
+        { id: 2, name: 'Tổ chức thi', img: exam, content: '+ Linh hoạt - Chính xác', content2: '+ Thi thử dễ dàng', content3: '+ Quy trình tối ưu'},
+        { id: 3, name: 'Chống gian lận', img: cheat, content: '+ Giám sát chặt chẽ', content2: '+ An toàn - Minh bạc', content3: '+ Ngăn gian lận tuyệt đối' },
+        { id: 4, name: 'Báo cáo', img: report, content: '+ Thống kê chi tiết', content2: '+ Số liệu trực quan', content3: '+ Phân tích toàn diện'},
+        { id: 5, name: 'Quản lý', img: management, content: '+ Kiểm soát dễ dàng', content2: '+ Quản trị hiệu quả', content3: '+ Đồng bộ - Tập chung' }
+    ]
     return (
-        <Box display={'flex'} position={'relative'} flexDirection={'column'}>
+        <Box display={'flex'} position={'relative'} flexDirection={'column'} m={1} p={2}>
             <Box display={'flex'} width={'96vw'} height={'50vh'} flexDirection={'column'}>
                 <Box height={'20%'} width={'100%'}>
                     <Typography component={'h3'} variant="h3">Chức năng</Typography>
@@ -19,11 +35,29 @@ export default function Feature() {
                     <Grid width={'100%'} height={'100%'} container columns={20} spacing={3}>
                         {feature.map((f) => (
                             <Grid size={4} bgcolor={'lightblue'} key={f.id}>
-                                <Card sx={{ width: '100%', height: '100%' }}>
+                                <Card sx={{ width: '100%', height: '100%' }}
+                                >
+                                    <CardMedia
+                                        sx={{ p: 1 }}
+                                        component={'img'}
+                                        image={f.img}
+                                        height={'150'}
+                                    />
                                     <CardContent>
-                                        <Typography component={'h3'} variant="h3">
-                                            {f.name}
-                                        </Typography>
+                                        <motion.div
+                                            initial={{ opacity: 0, x: -25 }}
+                                            animate={{ opacity: 1, x: 0 }}
+                                            transition={{
+                                                duration: 0.4,
+                                                ease: 'easeOut'
+                                            }}
+                                        >
+                                            <Typography>
+                                                {f.content} <br />
+                                                {f.content2} <br />
+                                                {f.content3}
+                                            </Typography>
+                                        </motion.div>
                                     </CardContent>
                                 </Card>
                             </Grid>
@@ -31,8 +65,8 @@ export default function Feature() {
                     </Grid>
                 </Box>
             </Box>
-            <Box width={'96vw'} height={'20vh'} justifyContent={'center'} alignContent={'center'}>
-                <Typography sx={{ p: 3 }} component={'h2'} variant="h2">Chi tiết các tính năng chính: </Typography>
+            <Box width={'96vw'} height={'20vh'} justifyContent={'center'} alignContent={'center'} mt={3}>
+                <Typography variant="h3">Chi tiết các tính năng chính: </Typography>
             </Box>
             <Box width={'96vw'} height={'auto'} display={'flex'} flexDirection={'column'} p={1}>
                 <Box width={'100%'} height={'19%'} p={1} m={2} component={Paper}>

@@ -25,7 +25,7 @@ export default function DialogConfirm({open, handleClose, id} :Props) {
         const payload = JSON.parse(value)
         setLoading(true)
         try {
-            const res = await axios.post(`https://localhost:7151/api/Exam/Submit?examId=${id}`, payload)
+            const res = await axios.post(`http://localhost:8089/api/Exam/Submit?examId=${id}`, payload)
             setResponse(res.data);
             localStorage.setItem('testFree', res.data)
             navigate(`/freetest/${id}/result`)

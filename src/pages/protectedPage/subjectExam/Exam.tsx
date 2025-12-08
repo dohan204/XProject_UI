@@ -72,9 +72,11 @@ export default function ExamPHP() {
     return (
         <Box display={'flex'} flexDirection={'column'} width={'98vw'} height={'auto'}>
             <Box width='98vw' height={'12vh'} p={2} m={1} display={'flex'} flexDirection={'row'}>
-                <Box width={'10%'} height={'100%'} display={'flex'} justifyContent={'flex-start'}>
+                <Box width={'10%'} display={'flex'} justifyContent={'flex-start'}>
                     <Button onClick={handlePrevouis} variant='contained'
+                        size='small'
                         sx={{
+                            height: '35px',
                             outline: 'none',
                             '&:focus': {
                                 outline: 'none'

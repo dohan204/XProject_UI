@@ -1,30 +1,73 @@
 import { Box, Card, CardActionArea, CardContent, CardMedia, Typography, CardActions, Button } from '@mui/material'
 import xstc from '../../../assets/xstc.jpg';
-import pldc from '../../../assets/pldc.webp';
-import th from '../../../assets/triethoc2.webp';
-import tlh from '../../../assets/tlh.png';
+import thdc from '../../../assets/subjectOther/thdc.jpg';
+import english from '../../../assets/subjectOther/english.jpg';
+import pldc from '../../../assets/subjectOther/pldc.jpg'
+import StartPractice from "../Homepage/StartPractice";
+import { useCallback, useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 interface Subject {
     id: number,
     name: string,
+    code: string,
     img: string
 }
-const subjectDifferent: Subject[] = [
-    { id: 1, name: 'Triết học', img: th ,  },
-    { id: 2, name: 'Pháp luật đại cương', img: pldc },
-    { id: 3, name: 'Tâm lý học', img: tlh },
-    { id: 4, name: 'Xác xuất thống kê', img: xstc }
-]
-export default function DifferentSubject() {
+interface Props {
+    handleGetCode?: () => void
+}
+const ListImage = [pldc, xstc, thdc, english];
+export default function DifferentSubject({ handleGetCode }: Props) {
+    const [otherSubject, setOtherSubject] = useState<Subject[]>([])
+    const [loading, setLoading] = useState(false)
+    const [openStartPractice, setOpenStartPractice] = useState<boolean>(false);
+    const [openTest, setOpenTest] = useState<boolean>(false);
+    const [codeSubject, setCodeSubject] = useState<string>('');
+    const navigate = useNavigate();
+    const otherSubjectId = 2;
+      const handleCloseTest = () => setOpenTest(false)
+    const getSubject = useCallback(async () => {
+        setLoading(true)
+        try {
+            const res = await axios.get<Subject[]>(`http://localhost:8089/api/Subject/GetByModule?moduleId=${otherSubjectId}`)
+            const payload = res.data.map((e, index) => ({
+                ...e,
+                img: ListImage[index]
+            }))
+            setOtherSubject(payload);
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setLoading(false);
+        }
+    }, [])
+
+    useEffect(() => {
+        getSubject();
+    }, [])
+
+    // viết riêng hàm khác 
+    const handleClickSubject = (code: string) => {
+        setCodeSubject(code)
+        if (!localStorage.getItem('tokenUser')) {
+            setOpenStartPractice(true);
+        } else {
+            navigate(`subject/${code}`)
+        }
+    }
     return (
         <Box width={'98%'} height={'100%'}
-            display={'flex'} flexDirection={'row'} justifyContent={'space-around'}
+            display={'flex'} flexDirection={'row'}
+            justifyContent={'space-around'}
         >
-            {subjectDifferent.map((subject) => (
-                <Box key={subject.id} width={'24%'} height={'95%'} m={1} p={2}  display={'flex'} justifyContent={'space-between'}>
+            {otherSubject.map((subject) => (
+                <Box key={subject.id} width={'24%'} height={'95%'} m={1} p={2} display={'flex'} justifyContent={'space-between'}>
                     <Card sx={{
                         width: '100%'
-                    }}>
-                        <CardActionArea>
+                    }} component={'div'} >
+                        <CardActionArea component='div'
+                            onClick={() => handleClickSubject(subject.code)}
+                        >
                             <CardMedia
                                 component={'img'}
                                 height={'200px'}
@@ -50,7 +93,7 @@ export default function DifferentSubject() {
                                     },
                                     overflow: 'auto',
                                     overflowY: 'hidden'
-                                
+
                                 }}
                             >
                                 <Typography>
@@ -70,6 +113,7 @@ export default function DifferentSubject() {
                     </Card>
                 </Box>
             ))}
+            <StartPractice open={openTest} handleClose={handleCloseTest} />
         </Box>
     )
 }
