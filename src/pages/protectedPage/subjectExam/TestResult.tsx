@@ -2,6 +2,7 @@ import { Box, Button, Paper, Typography } from '@mui/material';
 import React from 'react'
 // import { da } from 'date-fns/locale';
 import { PieChart } from '@mui/x-charts'
+import { useNavigate } from 'react-router-dom';
 export const valueFormatter = (item: { value: number }) => `${item.value}%`;
 // interface DisplayCorrect {
 //   isCorrectAnswer: number | undefined,
@@ -12,17 +13,24 @@ export const valueFormatter = (item: { value: number }) => `${item.value}%`;
 //   score: number | undefined
 // }
 export default function TestResult() {
-  // const data = localStorage.getItem('resultExam')
-  // const result = JSON.stringify(data)
+  const navigate = useNavigate();
+
+  const handlePrevRouter = () => {
+    navigate(-1);
+    localStorage.removeItem('resultExam')
+    sessionStorage.removeItem('indexQuestion')
+    sessionStorage.removeItem('exam')
+    sessionStorage.removeItem('timeTest')
+  }
+  const handleNextPageHome = () => {
+    navigate('/')
+    localStorage.removeItem('resultExam')
+    sessionStorage.removeItem('indexQuestion')
+    sessionStorage.removeItem('exam')
+    sessionStorage.removeItem('timeTest')
+  }
   const result2 = JSON.parse(localStorage.getItem('resultExam') ?? '{}');
-  // const resultCorrect: DisplayCorrect = {
-  //   isCorrectAnswer: result2?.correctAnswers,
-  //   score: result2?.score
-  // }
-  // const resultWrong: DisplayWrong = {
-  //   isWrong: result2?.wrongAnswers,
-  //   score: result2?.score
-  // }
+  console.log(result2);
   const dataDisplay = [
     {
       id: 0,
@@ -70,8 +78,8 @@ export default function TestResult() {
             width={200}
           />
           <Box width={'100%'} display={'flex'} justifyContent={'space-between'} m={1} p={1}>
-            <Button variant='contained' color='info'>Thi lại</Button>
-            <Button variant='contained' color='success'>Quay về trang chủ</Button>
+            <Button variant='contained' color='info' onClick={handlePrevRouter}>Thi lại</Button>
+            <Button variant='contained' color='success' onClick={handleNextPageHome}>Quay về trang chủ</Button>
           </Box>
         </Box>
       </Box>

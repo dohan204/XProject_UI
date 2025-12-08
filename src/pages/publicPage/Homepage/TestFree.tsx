@@ -4,26 +4,38 @@ import { type Question, type ExamDetails } from '../../../model/apiResponse/Exam
 import axios from 'axios';
 import type { Props } from '../../../model/props/Home';
 import TimeDown from '../../protectedPage/subjectExam/TimeDown';
-// import { set } from 'date-fns';
-// import { id } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 import DialogConfirm from './DialogConfirm';
 
 type ChoiceValue = Record<number, string>
 export default function TestFree({ openTest }: Props) {
+  const getInitialState = (key: string, defaultValue: ChoiceValue | number): any => {
+    const selectedValue = sessionStorage.getItem(key);
+    if (selectedValue) {
+      try {
+        return JSON.parse(selectedValue);
+      } catch (err) {
+        return selectdValue;
+      }
+    }
+    return defaultValue;
+  }
   const inputRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
+  const [index, setIndex] = useState<number>(0);
   const [currentExam, setCurrentExam] = useState<boolean>(false);
   const [currentSelect, setCurrentSelect] = useState<number>(0);
   const [timeTests, setTimeTests] = useState<number>(0)
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [numberOfQuestion, setNumberOfQuestion] = useState<number>(0)
-  const [selectdValue, setSelectedValue] = useState<ChoiceValue>({})
+  const [selectdValue, setSelectedValue] = useState<ChoiceValue>(
+    getInitialState( 'answer',{})
+  )
   const [loading, setLoading] = useState<boolean>(false)
   const [id, setId] = useState<number>(0);
   const [exam, setExam] = useState<ExamDetails | null>(null)
   const [questions, setQuestions] = useState<Question[]>([]) // Đổi tên biến cho rõ ràng hơn
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0); // State mới: Theo dõi chỉ mục câu hỏi hiện tại
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(getInitialState('index', 0)); // State mới: Theo dõi chỉ mục câu hỏi hiện tại
   console.log(selectdValue)
   const handleOpen = () => {
     // tìm và xóa dữ liệu cũ đi 
@@ -41,6 +53,7 @@ export default function TestFree({ openTest }: Props) {
     // mở đi dialog
     setOpenDialog(true)
   }
+
   const handleClose = () => setOpenDialog(false);
   const fetchData = useCallback(() => {
     const getRandomExamDetails = async () => {
@@ -59,7 +72,7 @@ export default function TestFree({ openTest }: Props) {
         if (timeTest) {
           setTimeTests(Number(timeTest))
         }
-        console.log('Thoi gian duoc luu voi gia tri: ', Number(timeTest))
+        // console.log('Thoi gian duoc luu voi gia tri: ', Number(timeTest))
         setQuestions(result ? result.question : [])
         setNumberOfQuestion(result.numberOfQuestions);
         setCurrentQuestionIndex(0); // Reset về câu hỏi đầu tiên khi tải đề thi mới
@@ -84,17 +97,19 @@ export default function TestFree({ openTest }: Props) {
       if (timeTest) {
         setTimeTests(Number(timeTest))
       }
-      console.log('Thoi gian duoc luu voi gia tri: ', Number(timeTest))
+      // console.log('Thoi gian duoc luu voi gia tri: ', Number(timeTest))
       setQuestions(exam ? exam.question : [])
       setNumberOfQuestion(exam.numberOfQuestions);
       // lay ra vi tri cua cau dang lam
 
-      const indexQuestion = localStorage.getItem('index')
+      const indexQuestion = sessionStorage.getItem('index')
+      console.log(indexQuestion)
       if (indexQuestion) {
         setCurrentQuestionIndex(parseInt(indexQuestion, 10))
       }
       // lay du lieu da luu ra tu sessionStorage 
-      const answerSelected = localStorage.getItem('answer')
+      const answerSelected = sessionStorage.getItem('answer')
+      console.log(answerSelected)
       if (answerSelected) {
         setSelectedValue(JSON.parse(answerSelected))
       }
@@ -108,7 +123,7 @@ export default function TestFree({ openTest }: Props) {
   // xu ly khi luu cac dap an
   // luu lai vi tri cua cau dang lam
   useEffect(() => {
-    localStorage.setItem('index', currentQuestionIndex.toString())
+    sessionStorage.setItem('index', currentQuestionIndex.toString())
     sessionStorage.setItem('answer', JSON.stringify(selectdValue))
   }, [selectdValue, currentQuestionIndex])
   // Hàm xử lý khi bấm nút "Next"
@@ -132,7 +147,7 @@ export default function TestFree({ openTest }: Props) {
     }))
   }
   // dau tien luu thoi gian bat dau vao session 
-  console.log('Thoi gian sau khi luu vao bien va duoc lay ra)', timeTests)
+  // console.log('Thoi gian sau khi luu vao bien va duoc lay ra)', timeTests)
   // Lấy câu hỏi hiện tại dựa trên index
   const currentQuestion = questions[currentQuestionIndex];
   return (

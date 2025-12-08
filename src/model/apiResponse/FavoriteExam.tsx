@@ -1,4 +1,5 @@
 export interface FavoriteExam {
+    id: number
     examId: number,
     examName: string,
     subjectName: string,

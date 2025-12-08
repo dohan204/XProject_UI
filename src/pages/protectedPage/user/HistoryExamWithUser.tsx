@@ -59,7 +59,8 @@ export default function HistoryExamWithUser() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {studentExams ? studentExams.map((exam, index) => (
+                        {studentExams ? studentExams.filter(e => e.score > 0)
+                        .sort((a,b) => b.score - a.score).map((exam, index) => (
                             <TableRow key={index}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{exam.examId}</TableCell>

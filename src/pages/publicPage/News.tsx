@@ -50,10 +50,10 @@ export default function News() {
           </motion.h1>
         </Box>
       </Box>
-      <Box width={'98vw'} height={'66vh'} display={'flex'} flexDirection={'column'} p={1}>
-        <Box height={'48%'} width={'100%'} display={'flex'} flexDirection={'row'}>
+      <Box width={'97vw'} height={'auto'} display={'flex'} flexDirection={'column'} p={1}>
+        <Box height={'50%'} width={'100%'} display={'flex'} flexDirection={'row'} p={1}>
           <Box height={'100%'} width={'50%'} display={'flex'} flexDirection={'column'}
-            justifyContent={'center'} alignItems={'center'} bgcolor={'lightblue'} p={1} m={1} component={Paper}>
+            justifyContent={'center'} alignItems={'center'} p={1} m={1} component={Paper}>
             <Box height={'30%'} display={'flex'} justifyContent={'center'} alignItems={'center'}>
               <motion.div
                 initial={{ x: -50, opacity: 0 }}
@@ -63,12 +63,12 @@ export default function News() {
                   duration: 1
                 }}
               >
-                <Typography sx={{fontSize: 35, mr: 20}}>
+                <Typography sx={{fontSize: 35}}>
                   Thông báo quan trọng
                 </Typography>
               </motion.div>
             </Box>
-            <Box height={'70%'} mr={15}>
+            <Box height={'70%'}>
               <motion.div
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -94,7 +94,7 @@ export default function News() {
                   duration: 1
                 }}
               >
-                <Typography sx={{fontSize: 35, mr: 20}}>
+                <Typography sx={{fontSize: 35}}>
                   Cập nhật hệ thống
                 </Typography>
               </motion.div>
@@ -116,7 +116,9 @@ export default function News() {
             </Box>
           </Box>
         </Box>
-        <Box height={'48%'} width={'100%'} display={'flex'} flexDirection={'row'} mt={1}>
+        <Box height={'50%'} width={'100%'} display={'flex'} flexDirection={'row'}
+          justifyContent={'center'} alignItems={'center'}
+        >
           <Box height={'100%'} width={'50%'} display={'flex'} flexDirection={'column'}
             justifyContent={'center'} alignItems={'center'}m={1} p={1} component={Paper}>
             <Box height={'30%'} alignContent={'center'}>
@@ -128,12 +130,12 @@ export default function News() {
                   duration: 1
                 }}
               >
-                <Typography sx={{fontSize: 35, mr: 20}}>
+                <Typography sx={{fontSize: 35}}>
                   Mẹo học tập và ôn thi
                 </Typography>
               </motion.div>
             </Box>
-            <Box height={'70%'} ml={8}>
+            <Box height={'70%'}>
               <motion.div
                 initial={{ x: -50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -148,7 +150,7 @@ export default function News() {
               </motion.div>
             </Box>
           </Box>
-          <Box height={'100%'} width={'50%'} display={'flex'} pt={1} m={1} component={Paper}
+          <Box height={'10%'} width={'50%'} display={'flex'} pt={1} m={1} component={Paper}
            flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
             <Box height={'30%'} alignContent={'center'}>
               <motion.div
@@ -164,7 +166,7 @@ export default function News() {
                 </Typography>
               </motion.div>
             </Box>
-            <Box height={'70%'} ml={12}>
+            <Box height={'70%'}>
               <motion.div
                 initial={{ x: 50, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}

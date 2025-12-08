@@ -65,9 +65,9 @@ export default function HomepageAbout() {
                             sx={{
                                 width: '100%',
                                 height: '100%',
-                                backgroundColor: 'lightpink',
+                                backgroundColor: 'rgba(110, 164, 195, 0.6)',
                                 '&:hover': {
-                                    transform: 'rotate(-10deg)',
+                                    // transform: 'rotate(-10deg)',
                                     transition: '0.3s ease',
                                     boxShadow: '3px 3px 6px gray'
                                 },
@@ -109,9 +109,9 @@ export default function HomepageAbout() {
                             sx={{
                                 width: '100%',
                                 height: '100%',
-                                backgroundColor: 'lightpink',
+                                bgcolor: 'rgba(214, 221, 195, 0.6)',
                                 '&:hover': {
-                                    transform: 'rotate(10deg)',
+                                    // transform: 'rotate(10deg)',
                                     transition: '0.3s ease',
                                     boxShadow: '3px 3px 6px gray'
                                 },
@@ -154,11 +154,12 @@ export default function HomepageAbout() {
                             sx={{
                                 width: '100%',
                                 height: '100%',
-                                backgroundColor: 'lightpink',
+                                bgcolor: 'rgba(214, 221, 226, 0.6)',
                                 '&:hover': {
-                                    transform: 'rotate(-10deg)',
+                                    // transform: 'rotate(360deg)',
                                     transition: '0.3s ease',
-                                    boxShadow: '3px 3px 6px gray'
+                                    boxShadow: '3px 3px 6px gray',
+                                    // background: 'linear-gradient(to right, #430089, #82ffa1)',
                                 },
                                 transition: '0.3s ease'
                                 // transform: 'translateX(-10%)'
@@ -196,9 +197,9 @@ export default function HomepageAbout() {
                             sx={{
                                 width: '100%',
                                 height: '100%',
-                                backgroundColor: 'lightpink',
+                                bgcolor: 'rgba(214, 255, 226, 0.6)',
                                 '&:hover': {
-                                    transform: 'rotate(10deg)',
+                                    // transform: 'rotate(10deg)',
                                     transition: '0.3s ease',
                                     boxShadow: '3px 3px 6px gray'
                                 },

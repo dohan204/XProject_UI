@@ -14,10 +14,12 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
+import SettingsIcon from '@mui/icons-material/Settings';
 import Logout from "../auth/Logout";
+import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
 // import Profile from "../pages/protectedPage/user/Profile";
 import OutputIcon from '@mui/icons-material/Output';
-import { ButtonGroup, Icon } from "@mui/material";
+import { ButtonGroup, Chip, Icon } from "@mui/material";
 import styles from '../css/layout.module.css'
 import { useAuth } from '../context/AuthContext';
 // import MenuUser from './MenuUser';
@@ -63,22 +65,22 @@ export default function NavBar() {
         <div
             className={styles.formDiv}
         >
-            <AppBar position="fixed" color='secondary'>
+            <AppBar position="fixed" sx={{bgcolor: 'white'}}>
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 , fontSize: '40px'}} />
+                        <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 , fontSize: '40px',}}  color='secondary' />
                         <Typography
                             variant="h6"
                             noWrap
                             component="a"
-                            href="#app-bar-with-responsive-menu"
+                            // href="#app-bar-with-responsive-menu"
                             sx={{
                                 mr: 2,
                                 display: { xs: 'none', md: 'flex' },
                                 fontFamily: 'monospace',
                                 fontWeight: 700,
                                 letterSpacing: '.3rem',
-                                color: 'inherit',
+                                color: 'black',
                                 textDecoration: 'none',
                                 fontSize: '40px'
                             }}
@@ -132,25 +134,15 @@ export default function NavBar() {
                                     <Typography>
                                         Tin tức
                                     </Typography>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Typography>
-                                        Hướng dẫn
-                                    </Typography>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Typography>
-                                        Liên hệ
-                                    </Typography>
-                                </MenuItem>
+                                </MenuItem> 
                             </Menu>
                         </Box>
-                        <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+                        <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1,}} color='secondary' />
                         <Typography
                             variant="h5"
                             noWrap
                             component="a"
-                            href="#app-bar-with-responsive-menu"
+                            // href="#app-bar-with-responsive-menu"
                             sx={{
                                 mr: 2,
                                 display: { xs: 'flex', md: 'none' },
@@ -158,39 +150,53 @@ export default function NavBar() {
                                 fontFamily: 'monospace',
                                 fontWeight: 700,
                                 letterSpacing: '.3rem',
-                                color: 'inherit',
+                                color: 'black',
                                 textDecoration: 'none',
                             }}
                         >
                             TEST X
                         </Typography>
-                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, zIndex: 1 }}>
-                            <MenuItem component={RouterNavLink} to="/" sx={{ color: 'white' }}>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, zIndex: 1, }}>
+                            <MenuItem component={RouterNavLink} to="/" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
+                                borderRadius: 20,
+                                color: 'rgba(255, 0, 128, 0.6)'
+                            } }}>
                                 Trang chủ
                             </MenuItem>
-                            <MenuItem component={RouterNavLink} to="/about" sx={{ color: 'white' }}>
+                            <MenuItem component={RouterNavLink} to="/about" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
+                                borderRadius: 20,
+                                color: 'rgba(255, 0, 128, 0.6)'
+                            } }}>
                                 Giới thiệu
                             </MenuItem>
-                            <MenuItem component={RouterNavLink} to="/feature" sx={{ color: 'white' }}>
+                            <MenuItem component={RouterNavLink} to="/feature" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
+                                borderRadius: 20,
+                                color: 'rgba(255, 0, 128, 0.6)'
+                            } }}>
                                 Tính năng
                             </MenuItem>
-                            <MenuItem component={RouterNavLink} to="/news" sx={{ color: 'white' }}>
+                            <MenuItem component={RouterNavLink} to="/news" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
+                                borderRadius: 20,
+                                color: 'rgba(255, 0, 128, 0.6)'
+                            } }}>
                                 Tin tức
                             </MenuItem>
-                            <MenuItem component={RouterNavLink} to="/tutorials" sx={{ color: 'white' }}>
-                                Hướng dẫn
+                            {user ? (
+                                <MenuItem component={RouterNavLink} to="/ratingeneric" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
+                                borderRadius: 20,
+                                color: 'rgba(255, 0, 128, 0.6)'
+                            } }}>
+                                Các Bài thi chung
                             </MenuItem>
-                            <MenuItem component={RouterNavLink} to="/contact" sx={{ color: 'white' }}>
-                                Liên hệ
-                            </MenuItem>
+                            ) : null}
                         </Box>
                         {token ? (
                             <Box sx={{
                                 flexGrow: 0, display: 'flex', flexDirection: 'row', justifyContent: 'center'
                                 , alignItems: 'center'
                             }}>
-                                <Typography sx={{ p: 2 }}>
-                                    {user ? `Chào mừng ${user.fullName}` : 'đăng nhập đi...'}
+                                <Typography sx={{ p: 2, color: 'black' }}>
+                                    {user ? `Chào mừng, ${user.fullName}` : 'đăng nhập đi...'}
                                 </Typography>
                                 <Tooltip title="Open settings">
                                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -214,16 +220,16 @@ export default function NavBar() {
                                     onClose={handleCloseUserMenu}
                                 >
                                     <MenuItem onClick={handleNextRouterProfile}>
-                                        <IconButton> <OutputIcon /></IconButton>
-                                        <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
+                                        <ManageAccountsTwoToneIcon sx={{p: 1}} />
+                                        <Typography sx={{ textAlign: 'center' }}>Hồ sơ</Typography>
                                     </MenuItem>
                                     <MenuItem onClick={handleCloseUserMenu}>
-                                        <IconButton> <OutputIcon /></IconButton>
-                                        <Typography sx={{ textAlign: 'center' }}>Settings</Typography>
+                                        <SettingsIcon sx={{p: 1}} />
+                                        <Typography sx={{ textAlign: 'center' }}>Cài đặt</Typography>
                                     </MenuItem>
                                     <MenuItem onClick={handleOpenLogout}>
-                                        <IconButton> <OutputIcon /></IconButton>
-                                        <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
+                                        <OutputIcon sx={{p: 1}} />
+                                        <Typography sx={{ textAlign: 'center' }}>Đăng xuất</Typography>
                                     </MenuItem>
                                 </Menu>
                                 {/* {/* <MenuUser /> */}

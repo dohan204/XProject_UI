@@ -1,8 +1,10 @@
-import { Box, 
+import {
+    Box,
     Button, Dialog, CircularProgress, Backdrop,
-     DialogActions, DialogContent, DialogTitle, Typography, 
-     Divider,
-     Paper} from '@mui/material'
+    DialogActions, DialogContent, DialogTitle, Typography,
+    Divider,
+    Paper
+} from '@mui/material'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../../../context/AuthContext'
 import axios from 'axios';
@@ -49,29 +51,82 @@ export default function InfoDetails({ open, handleClose }: PropsDetail) {
                         >
                             <CircularProgress color="secondary" />
                         </Backdrop>
-                    ): (<Box sx={{
-                        width: '300px',
+                    ) : (<Box sx={{
+                        width: '500px',
                         height: 'auto',
                         p: 2,
                         m: 1,
                         display: 'flex',
                         flexDirection: 'column',
-                        backgroundColor: 'lightskyblue'
+                        // backgroundColor: 'lightskyblue'
                     }} component={Paper}>
-                        <Typography>Tên đăng nhập:  {resUser?.userName}</Typography>
+                        <Typography fontWeight={'bold'} fontSize={'18px'}>
+                            Tên đăng nhập:
+                        </Typography>
+                        <Typography component={'div'}
+                            sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
+                        >
+                            <Typography>
+                                {resUser?.userName}
+                            </Typography>
+                        </Typography>
                         <Divider />
-                        <Typography>Họ và tên: {resUser?.fullName}</Typography>
+                        <Typography fontWeight={'bold'} fontSize={'18px'}>
+                            Họ và tên:
+                        </Typography>
+                        <Typography component={'div'}
+                            sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
+                        >
+                            <Typography>
+                                {resUser?.fullName}
+                            </Typography>
+                        </Typography>
                         <Divider />
-                        <Typography>Tài khoản emai: {resUser?.email}</Typography>
+                        <Typography fontWeight={'bold'} fontSize={'18px'}>
+                            Tài khoản Email:
+                        </Typography>
+                        <Typography component={'div'}
+                            sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
+                        >
+                            <Typography>
+                                {resUser?.email}
+                            </Typography>
+                        </Typography>
                         <Divider />
-                        <Typography>Điện thoại: {resUser?.phoneNumber}</Typography>
+                        <Typography fontWeight={'bold'} fontSize={'18px'}>
+                            Điện thoại:
+                        </Typography>
+                        <Typography component={'div'}
+                            sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
+                        >
+                            <Typography>
+                                {resUser?.phoneNumber}
+                            </Typography>
+                        </Typography>
                         <Divider />
                         {/* <Typography>{resUser</Typography> */}
-                        <Typography>Tỉnh/Thành phố: {resUser?.provinceId}</Typography>
+                        <Typography fontWeight={'bold'} fontSize={'18px'}>
+                            Tỉnh/Thành phố:
+                        </Typography>
+                        <Typography component={'div'}
+                            sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
+                        >
+                            <Typography>
+                                {resUser?.provinceId}
+                            </Typography>
+                        </Typography>
                         <Divider />
-                        <Typography>Phường/Xã: {resUser?.wardsCommuneId ?? "Chưa có thông tin!!."}</Typography>
-                        {/* <Typography>{resUser?.}</Typography> */}
-                        <Divider />
+                        <Typography fontWeight={'bold'} fontSize={'18px'}>
+                            Phường/Xã:
+                        </Typography>
+                        <Typography component={'div'}
+                            sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
+                        >
+                            <Typography>
+                                {resUser?.wardsCommuneId ?? "Chưa có thông tin!!"}
+                            </Typography>
+                        </Typography>
+                        {/* <Divider /> */}
                     </Box>)}
                 </DialogContent>
                 <DialogActions>
