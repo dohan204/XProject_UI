@@ -9,25 +9,16 @@ export default function Logout({open, handleClose} : LogoutProps){
     const handleLogout = async () => {
         setLoading(true)
         try {
-            // Gọi API logout (nếu backend cần invalidate token, refresh token, v.v.)
-            await axios.post('https://localhost:7151/api/Account/logout');
+            await axios.post('https://api.testx.space/api/Account/logout');
         } catch (error) {
-            // Nếu lỗi thì cũng không sao, vì ta vẫn muốn xóa token local
             console.warn('Logout API failed, but proceeding with local cleanup:', error);
         } finally {
             // Luôn xóa token dù API thành công hay thất bại
             localStorage.removeItem('token');
             localStorage.removeItem('tokenUser')
             localStorage.removeItem('user')
-            // (Tùy chọn) Xóa các thứ khác nếu có
-            // localStorage.removeItem('user');
-            // sessionStorage.clear();
-
-            // Redirect về login (nếu dùng React Router)
             navigate('/');
             handleClose();
-            // hoặc
-            // window.location.href = '/login';
             setLoading(false)
         }
     };

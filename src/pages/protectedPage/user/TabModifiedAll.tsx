@@ -3,12 +3,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import dayjs, { Dayjs } from 'dayjs'
-import React, { useState, useCallback, useEffect } from 'react'
+import dayjs from 'dayjs'
+import  { useState, useCallback, useEffect } from 'react'
 import { type Province } from "../../../model/apiResponse/Province";
 import { type WardsCommune } from "../../../model/apiResponse/WardsCommune";
 import type { UpdateUser, Gender } from '../../../model/user/UpdateUser';
-import { Box, TextField, Autocomplete, Button, Typography, Alert } from '@mui/material';
+import { Box, TextField, Autocomplete, Button, Typography, Alert, Stack, Dialog, DialogContent } from '@mui/material';
 import axios from 'axios';
 import { Controller, useForm } from 'react-hook-form';
 import { useAuth } from '../../../context/AuthContext';
@@ -18,7 +18,11 @@ const Gender = [
     {id: 1, name: 'Male'},
     {id: 2, name: 'Female'}
 ]
-export default function TabModifiedAll() {
+interface props {
+    handleCloseModified: () => void
+}
+export default function TabModifiedAll({handleCloseModified}: props) {
+    // const btnUpdateInfoRef = useRef<HTMLInputElement>(null);
     const [loadingForm, setLoadingForm] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
     const [success, setSuccess] = useState<boolean>(false);
@@ -30,9 +34,6 @@ export default function TabModifiedAll() {
     const [wardsCommunes, setWardsCommune] = useState<WardsCommune[]>([])
     const { control, handleSubmit, reset, formState: { errors } } = useForm<UpdateUser>({
         defaultValues: {
-            userName: '',
-            fullName: '',
-            email: '',
             gender: 'Other',
             phoneNumber: '',
             dateOfBirth: null,
@@ -40,9 +41,10 @@ export default function TabModifiedAll() {
             wardId: 0
         }
     })
-
+    const handleNotificationClose = () => setSuccess(false) 
+    const handleNotificationOpen = () => setSuccess(true)
     const getProvince = useCallback(async () => {
-        const provine = await axios.get('http://localhost:8089/api/Province/get-AllProvinceWithCommune')
+        const provine = await axios.get('https://api.testx.space/api/Province/get-AllProvinceWithCommune')
         const result = provine.data
         setProvinces(result)
     }, [])
@@ -54,13 +56,10 @@ export default function TabModifiedAll() {
         }
         setLoading(true)
         try {
-            const response = await axios.get(`http://localhost:8089/api/Account/getbyId?id=${userId}`)
+            const response = await axios.get(`https://api.testx.space/api/Account/getbyId?id=${userId}`)
             if (response) {
                 reset({
-                    userName: response?.data.userName,
-                    fullName: response?.data.fullName,
-                    email: response?.data?.email,
-                    gender: response?.data?.gender ?? "Chua thiet lap gioi tinh",
+                    gender: response?.data?.gender,
                     phoneNumber: response?.data?.phoneNumber,
                     dateOfBirth: response?.data?.dateOfBirth,
                     provinceId: response?.data?.provinceId,
@@ -100,10 +99,14 @@ export default function TabModifiedAll() {
         console.log(payload)
         setLoadingForm(true)
         try {
-            await axios.put(`https://localhost:7151/api/Account/updateAccount?id=${userId}`, payload)
+            await axios.put(`https://api.testx.space/api/Account/updateAccount?id=${userId}`, payload)
             setSuccess(true)
-            setMessage("Chỉnh sửa thông tin thành công.");
-            console.log('thành công.')
+            handleNotificationOpen()
+            setMessage("Cập Nhật thành công.")
+            // setMessage("Chỉnh sửa thông tin thành công.");
+            setTimeout(() => {
+                handleNotificationClose()
+            }, 1500)
         } catch(err) {
             if(axios.isAxiosError(err)){
                 if(err.response?.status === 500){
@@ -124,212 +127,143 @@ export default function TabModifiedAll() {
         }
     }
     return (
-        <div>
-            <form style={{
-                width: '500px',
-                height: 'auto',
-            }} onSubmit={handleSubmit(onSubmitData)}>
-                <Box height={'15%'} bgcolor={'lightblue'}>
-                    <Typography>
-                        {success && <Alert severity='success'>{message}</Alert>}
-                    </Typography>
-                    <Typography>
-                        {error && <Alert severity='error'>{errorMessage}</Alert>}
-                    </Typography>
-                </Box>
-                {!loading ? (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Box width={'100%'} height={'90%'}>
-                        <Box display={'flex'}
-                            flexDirection={'column'}
-                            justifyContent={'space-around'}
-                            alignItems={'center'}
-                            p={1}
-                           
-                        >
-                            <Controller
-                                name='userName'
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        label='Tài khoản'
-                                        sx={{m: 1}}
-                                        variant='outlined'
-                                        fullWidth
-                                        error={!!errors}
-                                        helperText={errors.wardId?.message}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                name='fullName'
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField
-                                        {...field}
-                                        label='Họ và tên'
-                                        variant='outlined'
-                                        fullWidth
-                                        error={!!errors}
-                                        helperText={errors.wardId?.message}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                name='email'
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField
-                                        sx={{
-                                            m: 1
-                                        }}
-                                        {...field}
-                                        label='Tài khoản email'
-                                        variant='outlined'
-                                        fullWidth
-                                        error={!!errors}
-                                        helperText={errors.wardId?.message}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                name='gender'
-                                control={control}
-                                render={({ field: {value, onChange} }) => (
-                                    <Autocomplete
-                                        options={Gender}
-                                        getOptionLabel={option => option.name}
-                                        value={Gender.find(e => e.name === value) || null}
-                                        onChange={(_, newValue) => (
-                                            onChange(newValue?.name || null)
-                                        )}
-                                        fullWidth
-                                        isOptionEqualToValue={(option, value) => option.name === value.name}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                label='Gender'
-                                            />  
-                                        )}
-                                    />
-                                )}
-                            />
-                        </Box>
-                        <Box display={'flex'}
-                            flexDirection={'column'}
-                            justifyContent={'space-around'}
-                            alignItems={'center'}
-                            p={1}
-                        >
-                            <Controller
-                                name='phoneNumber'
-                                control={control}
-                                render={({ field }) => (
-                                    <TextField
-                                        sx={{
-                                            m: 1,
-                                
-                                        }}
-                                        fullWidth
-                                        {...field}
-                                        label='Điện thoại'
-                                        variant='outlined'
-                                        error={!!errors}
-                                        helperText={errors.wardId?.message}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                name="dateOfBirth"
-                                control={control}
-                                rules={{ required: 'Chọn ngày sinh đi mày' }}
-                                render={({ field: { onChange, value }, fieldState: { error } }) => (
-                                    <DatePicker
-                                        label="Ngày sinh"
-                                        value={value ? dayjs(value) : null}        // quan trọng: phải convert sang dayjs
-                                        onChange={(date) => onChange(date ? date.toISOString() : null)}
-                                        slotProps={{
-                                            textField: {
-                                                error: !!error,
-                                                helperText: error?.message,
-                                                fullWidth: true,
-                                                // margin: "normal", // không cần nếu dùng sx
-                                            },
-                                        }}
-                                        sx={{
-                                            m: 1,
-                                        }}
-                                        
-                                    // sx={{ mt: 1, width: '100%' }}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                name='provinceId'
-                                control={control}
-                                render={({ field: { value, onChange } }) => (
-                                    <Autocomplete
-                                        options={provinces}
-                                        getOptionLabel={option => option.name}
-                                        value={provinces.find(p => p.id === value) ?? null}
-                                        onChange={(_, newValue) => {
-                                            newValue ? onChange(newValue.id) : 0
-                                            setWardsCommune(newValue ? newValue.wardsDto : [])
-                                        }}
-                                        disabled={wardsCommunes ? false : true}
-                                        fullWidth
-                                        sx={{mb: 1}}
-                                        isOptionEqualToValue={(option, value) => option.id === value?.id}
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                // sx={{mt: -0.2}}
-                                                label="Tỉnh/thành phố"
-                                                variant="outlined"
-                                                sx={{
-                                                    width: '100%'
-                                                }}
-                                                fullWidth
-                                            />
-                                        )}
-                                    />
-                                )}
-                            />
-                            <Controller
-                                name='wardId'
-                                control={control}
-                                render={({ field: { value, onChange } }) => (
-                                    <Autocomplete
-                                        options={wardsCommunes}
-                                        getOptionLabel={option => option.name}
-                                        value={wardsCommunes.find(w => w.id === value) || null}
-                                        disabled={!wardsCommunes.length}
-                                        onChange={(_, value) => onChange(value?.id ?? 0)}
-                                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                                        // sx={{ m: 1}}
-                                        fullWidth
-                                        renderInput={(params) => (
-                                            <TextField
-                                                {...params}
-                                                variant="outlined"
-                                                fullWidth
-                                                label="Phường/Xã"
-                                            />
-                                        )}
-                                    />
-                                )}
-                            />
-                        </Box>
-                    </Box>
+        <Box sx={{ width: '90%', p: 5, borderRadius: 5, boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08)'}}>
+            <form onSubmit={handleSubmit(onSubmitData)}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <Stack spacing={3}>
+                        {/* 1. Hàng thông báo */}
+                        {(success || error) && (
+                            <Box>
+                                {success && <Alert severity='success'>{message}</Alert>}
+                                {error && <Alert severity='error'>{errorMessage}</Alert>}
+                            </Box>
+                        )}
+
+                        {!loading ? (
+                            <Stack spacing={2}>
+                                {/* 2. Khu vực Input dàn hàng ngang (3 hàng) */}
+                                <Stack 
+                                    direction="row" 
+                                    useFlexGap 
+                                    flexWrap="wrap" 
+                                    spacing={2}
+                                >
+                                    {/* Hàng 1: Giới tính & Điện thoại */}
+                                    <Box sx={{ flex: '1 1 calc(50% - 16px)', minWidth: '200px' }}>
+                                        <Controller
+                                            name='gender'
+                                            control={control}
+                                            render={({ field: { value, onChange } }) => (
+                                                <Autocomplete
+                                                    options={Gender}
+                                                    getOptionLabel={option => option.name}
+                                                    value={Gender.find(e => e.name === value) || null}
+                                                    onChange={(_, newValue) => onChange(newValue?.name || null)}
+                                                    renderInput={(params) => <TextField {...params} label='Giới tính' fullWidth />}
+                                                />
+                                            )}
+                                        />
+                                    </Box>
+
+                                    <Box sx={{ flex: '1 1 calc(50% - 16px)', minWidth: '200px' }}>
+                                        <Controller
+                                            name='phoneNumber'
+                                            control={control}
+                                            render={({ field }) => (
+                                                <TextField {...field} label='Điện thoại' fullWidth error={!!errors.phoneNumber} />
+                                            )}
+                                        />
+                                    </Box>
+
+                                    {/* Hàng 2: Ngày sinh & Tỉnh/Thành phố */}
+                                    <Box sx={{ flex: '1 1 calc(50% - 16px)', minWidth: '200px' }}>
+                                        <Controller
+                                            name="dateOfBirth"
+                                            control={control}
+                                            render={({ field: { onChange, value }, fieldState: { error } }) => (
+                                                <DatePicker
+                                                    label="Ngày sinh"
+                                                    value={value ? dayjs(value) : null}
+                                                    onChange={(date) => onChange(date ? date.toISOString() : null)}
+                                                    slotProps={{ textField: { error: !!error, fullWidth: true } }}
+                                                />
+                                            )}
+                                        />
+                                    </Box>
+
+                                    <Box sx={{ flex: '1 1 calc(50% - 16px)', minWidth: '200px' }}>
+                                        <Controller
+                                            name='provinceId'
+                                            control={control}
+                                            render={({ field: { value, onChange } }) => (
+                                                <Autocomplete
+                                                    options={provinces}
+                                                    getOptionLabel={option => option.name}
+                                                    value={provinces.find(p => p.id === value) ?? null}
+                                                    onChange={(_, newValue) => {
+                                                        onChange(newValue?.id ?? 0);
+                                                        setWardsCommune(newValue ? newValue.wardsDto : []);
+                                                    }}
+                                                    renderInput={(params) => <TextField {...params} label="Tỉnh/thành phố" fullWidth />}
+                                                />
+                                            )}
+                                        />
+                                    </Box>
+
+                                    {/* Hàng 3: Phường/Xã (Có thể cho rộng ra hoặc để 50%) */}
+                                    <Box sx={{ flex: '1 1 calc(50% - 16px)', minWidth: '200px' }}>
+                                        <Controller
+                                            name='wardId'
+                                            control={control}
+                                            render={({ field: { value, onChange } }) => (
+                                                <Autocomplete
+                                                    options={wardsCommunes}
+                                                    getOptionLabel={option => option.name}
+                                                    value={wardsCommunes.find(w => w.id === value) || null}
+                                                    disabled={!wardsCommunes.length}
+                                                    onChange={(_, val) => onChange(val?.id ?? 0)}
+                                                    renderInput={(params) => <TextField {...params} label="Phường/Xã" fullWidth />}
+                                                />
+                                            )}
+                                        />
+                                    </Box>
+                                </Stack>
+
+                                {/* 3. Hàng nút bấm */}
+                                <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ mt: 2 }}>
+                                    <Button 
+                                        type='submit' 
+                                        variant='contained' 
+                                        disabled={loadingForm}
+                                        sx={{ minWidth: 100 }}
+                                    >
+                                        {loadingForm ? 'Đang lưu' : 'Lưu'}
+                                    </Button>
+                                    <Button variant='outlined' color='inherit' onClick={handleCloseModified}>
+                                        Đóng
+                                    </Button>
+                                </Stack>
+                            </Stack>
+                        ) : (
+                            <Typography align="center">Đang tải dữ liệu...</Typography>
+                        )}
+                    </Stack>
                 </LocalizationProvider>
-                ) : 'Khong co du lieu nguoi dung.'}
-                <Button type='submit' variant='contained' size='medium'
-                    disabled={loadingForm && true}
-                >
-                    {loadingForm ? 'Đang lưu' : 'Lưu'}
-                </Button>
             </form>
-        </div>
-    )
+            <DialogNotification open={success} handleClose={handleNotificationClose} />
+        </Box>
+    );
+}
+interface SuccessModified {
+    open: boolean,
+    handleClose: () => void
+}
+function DialogNotification({open, handleClose}: SuccessModified){
+    return <Dialog open={open} onClose={handleClose}>
+        <DialogContent>
+            <Typography>
+                Cập nhật thành công
+            </Typography>
+        </DialogContent>
+    </Dialog>
 }

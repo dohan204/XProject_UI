@@ -1,5 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
-import React from 'react'
+// import React from 'react'
 import type { PropsStart } from '../../../model/props/Home'
 export default function DialogStartIn({open, handleClose}: PropsStart) {
   return (

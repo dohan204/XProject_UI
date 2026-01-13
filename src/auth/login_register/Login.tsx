@@ -1,20 +1,25 @@
 import {
-    Box, Paper, Stack, TextField,
+    Box, TextField,
     FormControl, InputLabel, InputAdornment, Input, IconButton,
     Typography,
-    Button
+    Button,
+    CircularProgress,
+    Stack
 } from "@mui/material"
+import GoogleIcon from '@mui/icons-material/Google';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import type { LoginDto } from "../../model/auth/LoginDto"
+import FacebookIcon from '@mui/icons-material/Facebook';
 import { Controller, useForm, type SubmitHandler } from "react-hook-form"
 import { useState } from "react";
 import axios from "axios";
 import styles from '../../css/authentication.module.css';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 export default function Login() {
-    const location = useLocation();
+    // const location = useLocation();
     const navigate = useNavigate();
+    const [message, setMessage] = useState<boolean>(false);
     const [error, setError] = useState<string>('');
     const [showPassword, setShowPassword] = useState<boolean>(false)
     const [loading, setLoading] = useState<boolean>(false)
@@ -34,7 +39,7 @@ export default function Login() {
     const onSubmit: SubmitHandler<LoginDto> = async (data: LoginDto) => {
         setLoading(true)
         try {
-            const res = await axios.post('http://localhost:8089/api/Account/login', data)
+            const res = await axios.post('https://api.testx.space/api/Account/login', data)
             const result = res.data
             const token: string = result.token
             localStorage.setItem('token', token)
@@ -43,10 +48,13 @@ export default function Login() {
         } catch (err) {
             if (axios.isAxiosError(err)) {
                 if (err.response?.status === 401) {
+                    setMessage(true);
                     setError("Tài khoản hoặc mật khẩu không chính xác.")
                 } else if (err.response?.status === 500) {
-                    setError("Lỗi server, vui lòng liên hệ với người quản trị.");
+                    setMessage(true)
+                    setError("Tài khoản hoặc mật khẩu không chính xác");
                 } else if (err.response?.status === 404) {
+                    setMessage(true)
                     setError("Không có thông tin người dùng")
                 } else {
                     setError("Vui lòng thử lại sau")
@@ -58,11 +66,24 @@ export default function Login() {
             setLoading(false)
         }
     }
+    const loginWithGoogle = () => {
+        const returnUrl = encodeURIComponent(window.location.origin + "/");
+        window.location.href =
+            `https://api.testx.space/Auth/external-login?provider=Google&returnUrl=${returnUrl}`;
+    };
+    const loginWithFacebook = () => {
+        const returnUrl = encodeURIComponent(window.location.origin + "/");
+        window.location.href =
+            `https://api.testx.space/Auth/external-login?provider=Facebook&returnUrl=${returnUrl}`;
+    };
     return (
         <Box>
             <form onSubmit={handleSubmit(onSubmit)} className={styles.formLogin}>
                 <Typography variant="h5">
                     Đăng nhập
+                </Typography>
+                <Typography>
+                    {message && <span style={{ color: 'red' }}>{error}</span>}
                 </Typography>
                 <Controller
                     name='username'
@@ -86,7 +107,7 @@ export default function Login() {
                     name='password'
                     control={control}
                     rules={{ required: "Mật khẩu không được bỏ trống" }}
-                    render={({ field, fieldState: { error } }) => (
+                    render={({ field }) => (
                         <FormControl sx={{ m: 2 }} variant="standard">
                             <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
                             <Input
@@ -117,9 +138,20 @@ export default function Login() {
                 />
                 <Button type='submit' sx={{
                     p: 1, m: 1
-                }} variant="contained" color="secondary">
+                }} variant="contained" color="secondary" disabled={loading}
+                    startIcon={loading ? <CircularProgress color="inherit" /> : ''}
+                >
+
                     {loading ? 'Đang đăng nhập' : 'Đăng nhập'}
                 </Button>
+                <Stack spacing={1}>
+                    <Button startIcon={<GoogleIcon />} variant="contained" color='info' onClick={loginWithGoogle}>
+                        Đăng nhập bằng Google
+                    </Button>
+                    <Button startIcon={<FacebookIcon />} variant="contained" color='info' onClick={loginWithFacebook}>
+                        Đăng nhập bằng Facebook
+                    </Button>
+                </Stack>
                 <Typography component={Link} to='/register' sx={{
                     textDecorationColor: 'lightblue', textDecoration: 'none'
                 }}>

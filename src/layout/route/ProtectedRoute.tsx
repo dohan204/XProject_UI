@@ -1,12 +1,15 @@
-// import { OutletRounded } from "@mui/icons-material";
-
 import { Outlet } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 export default function ProtectedRoute(){
-    const token = localStorage.getItem('token')
-    if(!token)
+    const { user } = useAuth();
+    // const token = localStorage.getItem('token');
+    console.log('user external: ',user)
+    // ⭐ Chưa login → redirect về login
+    if(!user) {
         return;
-    return (
-        <Outlet />
-    )
+    }
+    
+    // ⭐ Đã login → render component
+    return <Outlet />;
 }

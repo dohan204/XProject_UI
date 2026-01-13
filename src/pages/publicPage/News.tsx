@@ -1,5 +1,5 @@
 import { Box, Paper, Typography } from '@mui/material'
-import React from 'react'
+// import React from 'react'
 import news from '../../assets/news.jpg';
 import { motion } from "framer-motion";
 

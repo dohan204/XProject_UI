@@ -1,7 +1,6 @@
-import React, { forwardRef, useState, type ReactElement, type Ref } from 'react'
 import { type Test } from '../../../model/props/Test'
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Slide, Typography } from '@mui/material'
-import { replace, useNavigate } from 'react-router-dom'
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material'
+import {  useNavigate } from 'react-router-dom'
 
 export default function AskSubmit({open, handleOpen, id} : Test) {
     const navigate = useNavigate();

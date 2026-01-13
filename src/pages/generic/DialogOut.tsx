@@ -1,7 +1,5 @@
-import React from 'react'
 import type { props } from '../../model/props/Practice'
-import { Accordion, AccordionActions, AccordionDetails
-    , AccordionSummary, Box, Button, Dialog, DialogActions, Slide,
+import {  Box, Button, Dialog, DialogActions,
     DialogContent, DialogTitle, Typography } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 export default function DialogOut({open, handleClose} : props) {

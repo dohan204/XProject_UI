@@ -1,29 +1,39 @@
 import {
-    Box,
-    Button, Dialog, CircularProgress, Backdrop,
-    DialogActions, DialogContent, DialogTitle, Typography,
+    Box, CircularProgress, Backdrop, Typography,
     Divider,
     Paper
 } from '@mui/material'
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useAuth } from '../../../context/AuthContext'
 import axios from 'axios';
-import type { RegisterDto } from '../../../model/auth/RegisterDto';
-interface PropsDetail {
-    open: boolean,
-    handleClose: () => void
+// import type { RegisterDto } from '../../../model/auth/RegisterDto';
+// interface PropsDetail {
+//     open: boolean,
+//     handleClose: () => void
+// }
+interface InfoResponse {
+    id: string,
+    userName: string, 
+    fullName: string,
+    email: string,
+    phoneNumber: string,
+    gender: string
+    lastLogin: Date,
+    dateOfBirth: Date,
+    provinceName: string,
+    wardsCommuneName: string
 }
-export default function InfoDetails({ open, handleClose }: PropsDetail) {
+export default function InfoDetails() {
     const { user } = useAuth();
     const userId = user?.nameid;
-    const [resUser, setResUser] = useState<RegisterDto | null>(null);
+    const [resUser, setResUser] = useState<InfoResponse | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const getUser = useCallback(async () => {
         if (!userId || userId === null)
             return;
         setLoading(true)
         try {
-            const res = await axios.get<RegisterDto>(`http://localhost:8089/api/Account/getbyId?id=${userId}`);
+            const res = await axios.get<InfoResponse>(`https://api.testx.space/api/Account/getbyId?id=${userId}`);
             setResUser(res.data);
         } catch (err) {
             console.log('lỗi', err);
@@ -36,14 +46,19 @@ export default function InfoDetails({ open, handleClose }: PropsDetail) {
     }, [userId])
     return (
         <div>
-            <Dialog open={open} maxWidth={'md'}
+            <Box
+                width={'100%'}
+                p={1}
+                borderRadius={'5px'} 
+                boxShadow={'5px 5px 10px lightgray'}
+                // border={'1px solid black'}
             >
-                <DialogTitle>
-                    <Typography color='warning'>
-                        Thông Tin Chi tiết
+                <Box height={'5vh'} alignContent={'center'} width={'100%'} alignItems={'center'} justifyContent={'center'}>
+                    <Typography color='warning' fontSize={'20px'}>
+                        Thông Tin Hiện tại 
                     </Typography>
-                </DialogTitle>
-                <DialogContent>
+                </Box>
+                <Box>
                     {loading ? (
                         <Backdrop
                             sx={(theme) => ({ color: '#fff', zIndex: theme.zIndex.drawer + 1 })}
@@ -52,7 +67,7 @@ export default function InfoDetails({ open, handleClose }: PropsDetail) {
                             <CircularProgress color="secondary" />
                         </Backdrop>
                     ) : (<Box sx={{
-                        width: '500px',
+                        width: '380px',
                         height: 'auto',
                         p: 2,
                         m: 1,
@@ -104,7 +119,28 @@ export default function InfoDetails({ open, handleClose }: PropsDetail) {
                             </Typography>
                         </Typography>
                         <Divider />
-                        {/* <Typography>{resUser</Typography> */}
+                        <Typography fontWeight={'bold'} fontSize={'18px'}>
+                            Giới tính:
+                        </Typography>
+                        <Typography component={'div'}
+                            sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
+                        >
+                            <Typography>
+                                {resUser?.gender}
+                            </Typography>
+                        </Typography>
+                        <Divider />
+                        <Typography fontWeight={'bold'} fontSize={'18px'}>
+                            Ngày sing:
+                        </Typography>
+                        <Typography component={'div'}
+                            sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
+                        >
+                            <Typography>
+                                {new Date(resUser?.dateOfBirth!).toLocaleDateString('vi-VN')}
+                            </Typography>
+                        </Typography>
+                        <Divider />
                         <Typography fontWeight={'bold'} fontSize={'18px'}>
                             Tỉnh/Thành phố:
                         </Typography>
@@ -112,33 +148,14 @@ export default function InfoDetails({ open, handleClose }: PropsDetail) {
                             sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
                         >
                             <Typography>
-                                {resUser?.provinceId}
+                                {resUser?.provinceName}
                             </Typography>
                         </Typography>
                         <Divider />
-                        <Typography fontWeight={'bold'} fontSize={'18px'}>
-                            Phường/Xã:
-                        </Typography>
-                        <Typography component={'div'}
-                            sx={{ height: '30px', display: 'flex', justifyContent: 'center' }}
-                        >
-                            <Typography>
-                                {resUser?.wardsCommuneId ?? "Chưa có thông tin!!"}
-                            </Typography>
-                        </Typography>
-                        {/* <Divider /> */}
+                        {/*  */}
                     </Box>)}
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant='contained'
-                        color='success' size='large'
-                        onClick={handleClose}
-                    >
-                        Đóng
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                </Box>
+            </Box>
         </div>
     )
 }
