@@ -1,21 +1,30 @@
-import React from 'react'
 interface PropsDialog {
     openOutlogin?: () => void,
     openInlogin?: () => void,
 }
-import bg2 from '../../../assets/backgroud2.jpg'
-import { CardActions, Box, Button, Card, CardActionArea, CardContent, CardHeader, CardMedia, Dialog, Grid, IconButton, Typography } from "@mui/material";
+
+// import bg2 from '../../../assets/backgroud2.jpg'
+import { CardActions, Box, Button, Card, CardContent,Grid, Typography } from "@mui/material";
 import { motion } from 'framer-motion';
 export default function HomeTopPage({openOutlogin, openInlogin}: PropsDialog) {
     return (
         <Box
             sx={{
-                width: '99vw',
+                width: '98vw',
                 height: '90vh',
                 position: 'relative',
                 backgroundImage: 'linear-gradient(to right, rgba(255,0,0,0), rgba(255,150,118,0.7))',
                 backgroundAttachment: 'fixed',
                 // backgroundColor: ,
+                // display: 'grid',
+                // gap: 3,
+                // gridTemplateColumns: {
+                //     xs: '1fr',
+                //     sm: '1fr 1fr',
+                //     md: '1fr 1fr 1fr',
+                //     lg: 'repeat(4, 1fr)'
+                // }
+
             }}
         >
             <Grid container spacing={3}
@@ -98,8 +107,6 @@ export default function HomeTopPage({openOutlogin, openInlogin}: PropsDialog) {
                             </motion.div>
                         </Grid>
                     </Grid>
-                    <Grid></Grid>
-                    <Grid></Grid>
                 </Grid>
             </Grid>
         </Box>

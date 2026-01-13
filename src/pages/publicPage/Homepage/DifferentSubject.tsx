@@ -1,4 +1,4 @@
-import { Box, Card, CardActionArea, CardContent, CardMedia, Typography, CardActions, Button } from '@mui/material'
+import { Box, Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material'
 import xstc from '../../../assets/xstc.jpg';
 import thdc from '../../../assets/subjectOther/thdc.jpg';
 import english from '../../../assets/subjectOther/english.jpg';
@@ -11,13 +11,20 @@ interface Subject {
     id: number,
     name: string,
     code: string,
-    img: string
+    img: string,
+    description: string
 }
-interface Props {
-    handleGetCode?: () => void
-}
-const ListImage = [pldc, xstc, thdc, english];
-export default function DifferentSubject({ handleGetCode }: Props) {
+// interface Props {
+//     handleGetCode?: () => void
+// }
+export const ListImage = [pldc, xstc, thdc, english];
+const Description = [
+    'Kiến thức nền tảng về luật và quy định.',
+     'Biểu đồ – phân tích dữ liệu và thống kê.',
+    'Kiến thức cơ bản về máy tính và công nghệ.',
+    'Học tiếng Anh và kỹ năng giao tiếp.'
+]
+export default function DifferentSubject() {
     const [otherSubject, setOtherSubject] = useState<Subject[]>([])
     const [loading, setLoading] = useState(false)
     const [openStartPractice, setOpenStartPractice] = useState<boolean>(false);
@@ -29,10 +36,11 @@ export default function DifferentSubject({ handleGetCode }: Props) {
     const getSubject = useCallback(async () => {
         setLoading(true)
         try {
-            const res = await axios.get<Subject[]>(`http://localhost:8089/api/Subject/GetByModule?moduleId=${otherSubjectId}`)
+            const res = await axios.get<Subject[]>(`https://api.testx.space/api/Subject/GetByModule?moduleId=${otherSubjectId}`)
             const payload = res.data.map((e, index) => ({
                 ...e,
-                img: ListImage[index]
+                img: ListImage[index],
+                description: Description[index]
             }))
             setOtherSubject(payload);
         } catch (err) {
@@ -45,7 +53,9 @@ export default function DifferentSubject({ handleGetCode }: Props) {
     useEffect(() => {
         getSubject();
     }, [])
-
+    if(openStartPractice){
+        console.log(codeSubject)
+    }
     // viết riêng hàm khác 
     const handleClickSubject = (code: string) => {
         setCodeSubject(code)
@@ -60,7 +70,7 @@ export default function DifferentSubject({ handleGetCode }: Props) {
             display={'flex'} flexDirection={'row'}
             justifyContent={'space-around'}
         >
-            {otherSubject.map((subject) => (
+            { !loading ? otherSubject.map((subject) => (
                 <Box key={subject.id} width={'24%'} height={'95%'} m={1} p={2} display={'flex'} justifyContent={'space-between'}>
                     <Card sx={{
                         width: '100%'
@@ -80,7 +90,7 @@ export default function DifferentSubject({ handleGetCode }: Props) {
                                     // bottom   : 0,
                                     background: 'lightgray',
                                     color: '#fff',
-                                    transform: 'translateY(-22.5%)',
+                                    transform: 'translateY(10.5%)',
                                     height: 'auto',
                                     // slide-up
                                     // transform: 'translateY(50%)',
@@ -88,7 +98,7 @@ export default function DifferentSubject({ handleGetCode }: Props) {
                                     transition: '0.4s ease',
                                     // khi hover card thì content trượt lên
                                     '.MuiCard-root:hover &': {
-                                        transform: 'translateY(-50%)',
+                                        transform: 'translateY(-100%)',
                                         width: 'auto'
                                     },
                                     overflow: 'auto',
@@ -100,19 +110,13 @@ export default function DifferentSubject({ handleGetCode }: Props) {
                                     {subject.name}
                                 </Typography>
                                 <Typography>
-                                    Ranging across all continents except Antarctica
-                                </Typography>
-                                <Typography>
-                                    Ranging across all continents except Antarctica
-                                </Typography>
-                                <Typography>
-                                    Ranging across all continents except Antarctica
+                                    Kiến thức nền tảng về luật và quy định.
                                 </Typography>
                             </CardContent>
                         </CardActionArea>
                     </Card>
                 </Box>
-            ))}
+            )) : []}
             <StartPractice open={openTest} handleClose={handleCloseTest} />
         </Box>
     )

@@ -7,202 +7,201 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
+import PersonIcon from '@mui/icons-material/Person';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import SettingsIcon from '@mui/icons-material/Settings';
-import Logout from "../auth/Logout";
-import ManageAccountsTwoToneIcon from '@mui/icons-material/ManageAccountsTwoTone';
-// import Profile from "../pages/protectedPage/user/Profile";
-import OutputIcon from '@mui/icons-material/Output';
-import { ButtonGroup, Chip, Icon } from "@mui/material";
+import { ButtonGroup } from "@mui/material";
 import styles from '../css/layout.module.css'
 import { useAuth } from '../context/AuthContext';
-// import MenuUser from './MenuUser';
-// import UserMenu from './UserMenu';
+
 export default function NavBar() {
-    const { user } = useAuth();
-    console.log('using useContext', user)
-    const navigate = useNavigate()
-    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+    // ⭐ Lấy user và logout từ context
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-    const [openLogout, setOpenLogout] = useState<boolean>(false)
-    // const [openProfile, setOpenProfile] = useState<boolean>(false)
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
+    const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);  // ⭐ Loading state
+
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
     };
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
     };
-    const handleOpenLogout = () => setOpenLogout(true)
-    const handleCloseLogout = () => setOpenLogout(false)
+
     const handleNextRouterProfile = () => {
         navigate('/profile', { replace: false });
-    }
-    // khi người dùng đăng nhập, sẽ có token
-    // và hiện giờ token đang được lưu ở localStorage, nên mình sẽ lấy từ đó ra để kiểm tra
-    // nếu có thì là người dùng đã đăng nhập còn nếu không thì là chưa
-    const token = localStorage.getItem('token');
-    const nextRouteLogin = () => {
-        navigate('/login', { replace: true })
-    }
-    const nextRouteRegister = () => {
-        navigate('/register')
-    }
-    return (
-        <div
-            className={styles.formDiv}
-        >
-            <AppBar position="fixed" sx={{bgcolor: 'white'}}>
-                <Container maxWidth="xl">
-                    <Toolbar disableGutters>
-                        <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 , fontSize: '40px',}}  color='secondary' />
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component="a"
-                            // href="#app-bar-with-responsive-menu"
-                            sx={{
-                                mr: 2,
-                                display: { xs: 'none', md: 'flex' },
-                                fontFamily: 'monospace',
-                                fontWeight: 700,
-                                letterSpacing: '.3rem',
-                                color: 'black',
-                                textDecoration: 'none',
-                                fontSize: '40px'
-                            }}
-                        >
-                            TESTX
-                        </Typography>
+        handleCloseUserMenu();
+    };
 
-                        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-                            <IconButton
-                                size="large"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleOpenNavMenu}
-                                color="inherit"
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorElNav}
-                                anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'left',
+    const handleLogout = async () => {
+        setIsLoggingOut(true);
+        handleCloseUserMenu();
+        
+        try {
+            localStorage.removeItem('token')
+            await logout();  // ⭐ Gọi logout từ context
+        } catch (error) {
+            console.error('Logout error:', error);
+            setIsLoggingOut(false);
+        }
+    };
+
+    const nextRouteLogin = () => {
+        navigate('/login', { replace: true });
+    };
+
+    const nextRouteRegister = () => {
+        navigate('/register');
+    };
+
+    const next = (url: string) => {
+        navigate(url);
+    };
+
+    return (
+        <div className={styles.formDiv}>
+            <AppBar position="fixed" sx={{ bgcolor: 'white' }}>
+                <Container maxWidth="xl">
+                    <Toolbar disableGutters sx={{height: '12vh'}}>
+                        {/* Logo */}
+                        <Box width={'100%'} display={'flex'} justifyContent={'flex-start'} alignItems={'center'}>
+                            <AdbIcon sx={{ mr: 1, fontSize: '40px' }} color='secondary' />
+                            <Typography
+                                variant="h6"
+                                noWrap
+                                component="a"
+                                sx={{
+                                    mr: 2,
+                                    display: { xs: 'none', md: 'flex' },
+                                    fontFamily: 'monospace',
+                                    fontWeight: 700,
+                                    letterSpacing: '.3rem',
+                                    color: 'black',
+                                    textDecoration: 'none',
+                                    fontSize: '40px'
                                 }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'left',
-                                }}
-                                open={Boolean(anchorElNav)}
-                                onClose={handleCloseNavMenu}
-                                sx={{ display: { xs: 'block', md: 'none' } }}
                             >
-                                <MenuItem onClick={() => alert('dcmm nhuw con cak')}>
-                                    <Typography>
-                                        Trang chủ
-                                    </Typography>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Typography>
-                                        Giới thiệu
-                                    </Typography>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Typography>
-                                        Tính năng
-                                    </Typography>
-                                </MenuItem>
-                                <MenuItem>
-                                    <Typography>
-                                        Tin tức
-                                    </Typography>
-                                </MenuItem> 
-                            </Menu>
+                                TESTX
+                            </Typography>
                         </Box>
-                        <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1,}} color='secondary' />
-                        <Typography
-                            variant="h5"
-                            noWrap
-                            component="a"
-                            // href="#app-bar-with-responsive-menu"
-                            sx={{
-                                mr: 2,
-                                display: { xs: 'flex', md: 'none' },
-                                flexGrow: 1,
-                                fontFamily: 'monospace',
-                                fontWeight: 700,
-                                letterSpacing: '.3rem',
-                                color: 'black',
-                                textDecoration: 'none',
-                            }}
-                        >
-                            TEST X
-                        </Typography>
-                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, zIndex: 1, }}>
-                            <MenuItem component={RouterNavLink} to="/" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
-                                borderRadius: 20,
-                                color: 'rgba(255, 0, 128, 0.6)'
-                            } }}>
+
+                        {/* Menu giữa */}
+                        <Box sx={{ flexGrow: 1, display: 'flex', zIndex: 1, width: '100%', justifyContent: 'center' }}>
+                            <MenuItem 
+                                component={RouterNavLink} 
+                                to="/" 
+                                sx={{
+                                    color: 'black', 
+                                    fontFamily: 'Arial', 
+                                    fontSize: 25, 
+                                    '&:hover, &:active, &:focus': {
+                                        borderRadius: 20,
+                                        color: 'rgba(255, 0, 128, 0.6)'
+                                    }
+                                }}
+                            >
                                 Trang chủ
                             </MenuItem>
-                            <MenuItem component={RouterNavLink} to="/about" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
-                                borderRadius: 20,
-                                color: 'rgba(255, 0, 128, 0.6)'
-                            } }}>
+                            <MenuItem 
+                                component={RouterNavLink} 
+                                to="/about" 
+                                sx={{
+                                    color: 'black', 
+                                    fontFamily: 'Arial', 
+                                    fontSize: 25, 
+                                    '&:hover, &:active, &:focus': {
+                                        borderRadius: 20,
+                                        color: 'rgba(255, 0, 128, 0.6)'
+                                    }
+                                }}
+                            >
                                 Giới thiệu
                             </MenuItem>
-                            <MenuItem component={RouterNavLink} to="/feature" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
-                                borderRadius: 20,
-                                color: 'rgba(255, 0, 128, 0.6)'
-                            } }}>
+                            <MenuItem 
+                                component={RouterNavLink} 
+                                to="/feature" 
+                                sx={{
+                                    color: 'black', 
+                                    fontFamily: 'Arial', 
+                                    fontSize: 25, 
+                                    '&:hover, &:active, &:focus': {
+                                        borderRadius: 20,
+                                        color: 'rgba(255, 0, 128, 0.6)'
+                                    }
+                                }}
+                            >
                                 Tính năng
                             </MenuItem>
-                            <MenuItem component={RouterNavLink} to="/news" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
-                                borderRadius: 20,
-                                color: 'rgba(255, 0, 128, 0.6)'
-                            } }}>
-                                Tin tức
-                            </MenuItem>
-                            {user ? (
-                                <MenuItem component={RouterNavLink} to="/ratingeneric" sx={{ color: 'black' ,fontFamily: 'Arial',fontSize: 20, '&:hover, &:active, &:focus' : {
-                                borderRadius: 20,
-                                color: 'rgba(255, 0, 128, 0.6)'
-                            } }}>
-                                Các Bài thi chung
-                            </MenuItem>
-                            ) : null}
+
+                            {/* ⭐ Chỉ hiện khi đã đăng nhập */}
+                            {user && (
+                                <>
+                                    <MenuItem 
+                                        component={RouterNavLink} 
+                                        to="/ratingeneric" 
+                                        sx={{
+                                            color: 'black', 
+                                            fontFamily: 'Arial', 
+                                            fontSize: 25,
+                                            '&:hover, &:active, &:focus': {
+                                                borderRadius: 20,
+                                                color: 'rgba(255, 0, 128, 0.6)'
+                                            }
+                                        }}
+                                    >
+                                        Bảng xếp hạng
+                                    </MenuItem>
+                                    <MenuItem 
+                                        component={RouterNavLink} 
+                                        to="/subject" 
+                                        sx={{
+                                            color: 'black', 
+                                            fontFamily: 'Arial', 
+                                            fontSize: 25,
+                                            '&:hover, &:active, &:focus': {
+                                                borderRadius: 20,
+                                                color: 'rgba(255, 0, 128, 0.6)'
+                                            }
+                                        }}
+                                    >
+                                        Bài thi
+                                    </MenuItem>
+                                </>
+                            )}
                         </Box>
-                        {token ? (
-                            <Box sx={{
-                                flexGrow: 0, display: 'flex', flexDirection: 'row', justifyContent: 'center'
-                                , alignItems: 'center'
-                            }}>
-                                <Typography sx={{ p: 2, color: 'black' }}>
-                                    {user ? `Chào mừng, ${user.fullName}` : 'đăng nhập đi...'}
-                                </Typography>
-                                <Tooltip title="Open settings">
-                                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                        <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+
+                        {/* User menu hoặc Login/Register buttons */}
+                        {user ? (
+                            <Box 
+                                width={'100%'} 
+                                sx={{
+                                    display: 'flex', 
+                                    flexDirection: 'row', 
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'center'
+                                }}
+                            >
+                                {/* ⭐ Hiển thị loading khi đang logout */}
+                                {isLoggingOut ? (
+                                    <Typography sx={{ color: 'black', mr: 2 }}>
+                                        Đang đăng xuất...
+                                    </Typography>
+                                ) : (
+                                    <Typography sx={{ color: 'black', mr: 2 }}>
+                                        Chào mừng, {user.fullName}
+                                    </Typography>
+                                )}
+
+                                <Tooltip title="Cài đặt">
+                                    <IconButton onClick={handleOpenUserMenu} disabled={isLoggingOut}>
+                                        <PersonIcon />
                                     </IconButton>
                                 </Tooltip>
+
                                 <Menu
                                     sx={{ mt: '45px' }}
                                     id="menu-appbar"
@@ -220,31 +219,52 @@ export default function NavBar() {
                                     onClose={handleCloseUserMenu}
                                 >
                                     <MenuItem onClick={handleNextRouterProfile}>
-                                        <ManageAccountsTwoToneIcon sx={{p: 1}} />
+                                        {/* <ManageAccountsTwoToneIcon sx={{ p: 1 }} /> */}
                                         <Typography sx={{ textAlign: 'center' }}>Hồ sơ</Typography>
                                     </MenuItem>
-                                    <MenuItem onClick={handleCloseUserMenu}>
-                                        <SettingsIcon sx={{p: 1}} />
-                                        <Typography sx={{ textAlign: 'center' }}>Cài đặt</Typography>
+                                    {/* <MenuItem onClick={nextGroup}>
+                                        <SettingsIcon sx={{ p: 1 }} />
+                                        <Typography sx={{ textAlign: 'center' }}>Nhóm</Typography>
+                                    </MenuItem> */}
+                                    {/* ⭐ Gọi handleLogout thay vì logout trực tiếp */}
+                                    <MenuItem onClick={() => next('user/favoriteExam')}>
+                                        <Typography>
+                                            Đề thi yêu thích
+                                        </Typography>
                                     </MenuItem>
-                                    <MenuItem onClick={handleOpenLogout}>
-                                        <OutputIcon sx={{p: 1}} />
+                                    <MenuItem onClick={() => next('user/history')}>
+                                        <Typography>
+                                            Điểm thi
+                                        </Typography>
+                                    </MenuItem>
+                                    <MenuItem onClick={() => next('user/settings')}>
+                                        
+                                        <Typography>
+                                            Cài đặt tài khoản
+                                        </Typography>
+                                    </MenuItem>
+                                    <MenuItem onClick={handleLogout}>
+                                        {/* <OutputIcon sx={{ p: 1 }} /> */}
                                         <Typography sx={{ textAlign: 'center' }}>Đăng xuất</Typography>
                                     </MenuItem>
                                 </Menu>
-                                {/* {/* <MenuUser /> */}
-                                {/* <UserMenu /> */}
                             </Box>
-                        ) : (<Box>
-                            <ButtonGroup>
-                                <Button onClick={nextRouteLogin} sx={{ zIndex: 1 }} variant="text" color="error" >Đăng nhập</Button>
-                                <Button onClick={nextRouteRegister} sx={{ zIndex: 1 }} variant="text" color="error" >Đăng ký</Button>
-                            </ButtonGroup>
-                        </Box>)}
+                        ) : (
+                            <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+                                <ButtonGroup>
+                                    <Button onClick={nextRouteLogin} sx={{ zIndex: 1 }} variant="text" color="error">
+                                        Đăng nhập
+                                    </Button>
+                                    <Button onClick={nextRouteRegister} sx={{ zIndex: 1 }} variant="text" color="error">
+                                        Đăng ký
+                                    </Button>
+                                </ButtonGroup>
+                            </Box>
+                        )}
                     </Toolbar>
                 </Container>
             </AppBar>
-            <Logout open={openLogout} handleClose={handleCloseLogout} />
+            {/* ⭐ Xóa component Logout vì không cần nữa */}
         </div>
     )
 }

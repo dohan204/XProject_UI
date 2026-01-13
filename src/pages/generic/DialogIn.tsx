@@ -5,7 +5,7 @@ import {
 } from '@mui/material'
 import { type TransitionProps } from '@mui/material/transitions';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import React, {
+import  {
     useCallback, useEffect, type Ref,
     useState, forwardRef, type ReactElement
 } from 'react'
@@ -23,7 +23,7 @@ const Transition = forwardRef(function Transition(
     return <Slide direction='up' ref={ref} {...props} />
 })
 
-export default function DialogIn({ open, handleClose, id }: props) {
+export default function DialogIn({ open, handleClose }: props) {
     const [examId, setExamId] = useState<number>(0);
     const [ask, setAsk] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false)
@@ -31,7 +31,7 @@ export default function DialogIn({ open, handleClose, id }: props) {
     const getAllExam = useCallback(async () => {
         setLoading(true)
         try {
-            const res = await axios.get<Exam[]>('http://localhost:8089/api/Exam/exams')
+            const res = await axios.get<Exam[]>('https://api.testx.space/api/Exam/exams')
             setExam(res.data);
         } catch (err) {
             console.error('không có dữ liệu đề thi.', err)

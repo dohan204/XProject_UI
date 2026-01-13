@@ -1,43 +1,78 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { type UserInfo } from "../context/AuthContext";
+import { jwtDecode } from 'jwt-decode';
+import { AuthProvider } from "../context/AuthContext";
 import NavBar from "./NavBar";
 import Footer from "../pages/publicPage/Footer";
-import { jwtDecode } from "jwt-decode";
-// import { createContext } from "react";
-import { AuthProvider, type UserInfo } from "../context/AuthContext";
-// import { ok } from "assert";
-// const AuthenticationContext = createContext();
-export default function MainLayout() {
-    const navigate = useNavigate();
+import { Outlet } from "react-router-dom";
 
-    const token: string | null = localStorage.getItem('token');
-    const tokenConvert = String(token)
-    console.log(tokenConvert);
-    let userInfo: UserInfo | null = null;
-    try {
-        userInfo = jwtDecode<UserInfo>(tokenConvert);
-        console.log('thông tin người dùng từ token trả về', userInfo);
-    } catch (err) {
-        console.error('Failed to decode token or token is invalid: ', err)
-        // neu token bi loi(het han, sai dinh dang), xoa token va dang xuat
-        localStorage.removeItem('token')
-        // navigate('/login');
-    } 
+export default function MainLayout() {
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+    const [loading, setLoading] = useState(true);  // ⭐ Thêm loading
+
+    useEffect(() => {
+        const handleAuth = async () => {
+            try {
+                let token: string | null = null;
+                // 1. Kiểm tra cookie trước (external login)
+                if (typeof cookieStore !== 'undefined') {
+                    const cookie = await cookieStore.get('display_token');
+                    token = cookie?.value || null;
+
+                } else {
+                    // Fallback cho browser cũ
+                    const name = 'display_token';
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; ${name}=`);
+                    if (parts.length === 2) {
+                        token = parts.pop()?.split(';').shift() || null;
+                    }
+                }
+
+                // 2. Nếu không có cookie, check localStorage (normal login)
+                if (!token) {
+                    token = localStorage.getItem('token');
+                }
+
+                // 3. Decode token nếu có
+                if (token) {
+                    const decoded = jwtDecode<UserInfo>(token);
+                    setUserInfo(decoded);
+                    localStorage.setItem('token', token)
+                    console.log('User info:', decoded);
+                } else {
+                    setUserInfo(null);
+                }
+
+            } catch (error) {
+                console.error('Auth error:', error);
+                setUserInfo(null);
+            } finally {
+                setLoading(false);  // ⭐ Tắt loading
+            }
+        };
+
+        handleAuth();
+    }, []);
+
+    // ⭐ Show loading khi đang check auth
+    if (loading) {
+        return <div>Loading...</div>;  // Hoặc component Spinner đẹp hơn
+    }
+
     return (
         <AuthProvider userInfo={userInfo}>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                overflowX: 'hidden',
-                width: '98vw'
-            }}>
+            <div style={{ display: 'flex', flexDirection: 'column', width: '97vw' }}>
                 <NavBar />
-                <main style={{ width: '100%', marginTop: '64px' }}>
+                <main style={{
+                    marginTop: '80px', display: "flex",
+                    flexDirection: "column",
+                    minHeight: "70vh",
+                }}>
                     <Outlet />
                 </main>
-                <footer style={{ padding: 10 }}>
-                    <Footer />
-                </footer>
+                <Footer />
             </div>
         </AuthProvider>
-    )
+    );
 }

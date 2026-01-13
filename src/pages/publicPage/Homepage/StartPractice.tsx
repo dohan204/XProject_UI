@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import type { props, Exam } from '../../../model/props/Practice';
+// import { useState } from 'react';/
+import type { props } from '../../../model/props/Practice';
 import DialogOut from '../../generic/DialogOut';
 import DialogIn from '../../generic/DialogIn';
 export default function StartPractice({ open, handleClose}: props) {

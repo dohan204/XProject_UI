@@ -1,5 +1,5 @@
-import React from 'react'
 import {Box, Grid, Typography} from '@mui/material'
+
 export default function HomepageMiddleTop() {
     return (
         <Box width={'99vw'} height={'70vh'}>

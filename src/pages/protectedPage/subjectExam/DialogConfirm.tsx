@@ -1,11 +1,13 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
 import axios from 'axios';
-import React,  {useState} from 'react'
+import {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 interface props {
     open: boolean,
     handleClose: () => void,
-    examId?: number
+    examId?: number,
+    Isdirty: () => void,
+    handleProcesseds?: () => void
 }
 export interface responseApi {
     totalQuestions: number,
@@ -14,9 +16,9 @@ export interface responseApi {
     score: number
 }
 
-export default function DialogConfirm({open, handleClose, examId}: props) {
+export default function DialogConfirm({open, handleClose, examId, Isdirty}: props) {
     const [loading, setLoading] = useState<boolean>(false);
-    const [result, setResult] = useState<responseApi|null>(null);
+    // const [result, setResult] = useState<responseApi|null>(null);
     const navigate = useNavigate();
     const exam = sessionStorage.getItem('exam');
     console.log(exam , 'Gia stri')
@@ -28,7 +30,7 @@ export default function DialogConfirm({open, handleClose, examId}: props) {
         const examData = JSON.parse(exam);
         setLoading(true);
         try {
-            var result = await axios.post(`https://localhost:7151/api/Exam/submitExam/${examId}`, examData, {
+            var result = await axios.post(`https://api.testx.space/api/Exam/submitExam/${examId}`, examData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -51,9 +53,12 @@ export default function DialogConfirm({open, handleClose, examId}: props) {
             setLoading(false);
             localStorage.removeItem('exam');
         }
+        Isdirty();
+        // handleProcesseds();
         navigate(`/test/${examId}/result`);
+
     }
-    console.log(result)
+    // console.log(result)
 
   return (
     <Dialog open={open} onClose={handleClose}>
@@ -68,10 +73,10 @@ export default function DialogConfirm({open, handleClose, examId}: props) {
             </Typography>
         </DialogContent>
         <DialogActions>
-            <Button onClick={handlePostExamToServer}>
+            <Button onClick={handlePostExamToServer} variant='contained' color='success'>
                 {loading ? "Dang gui..." : 'Xac nhan'}
             </Button>
-            <Button onClick={handleClose}>
+            <Button onClick={handleClose} variant='contained' color='error'>
                 Hủy
             </Button>
         </DialogActions>

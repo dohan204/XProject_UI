@@ -2,8 +2,9 @@ import { Box, Grid, Paper, Typography } from '@mui/material'
 
 export default function Footer() {
   return (
-    <Box width={'98vw'} height={'40'} p={5} component={Paper}>
-        <Grid container columns={16} spacing={3} >
+    <Box width={'97vw'} height={'40dvh'} component={Paper}>
+        <Grid container columns={16} spacing={3} sx={{p: 4}}
+        >
             <Grid size={4}>
                 <Box>
                     <Typography variant='h5'>Bạn cần hỗ trợ</Typography>
@@ -26,9 +27,6 @@ export default function Footer() {
                     </Typography>
                     <Typography>
                         Tin tức 
-                    </Typography>
-                    <Typography>
-                        Hướng dẫn 
                     </Typography>
                     <Typography>
                         Chính sách và điều khoản
@@ -70,15 +68,6 @@ export default function Footer() {
                     <Typography>zalo</Typography>
                     <Typography>
                     Youtobe
-                    </Typography>
-                    <Typography variant='h5'>
-                        Bản quền
-                    </Typography>
-                    <Typography>
-                        hansonakk205
-                    </Typography>
-                    <Typography>
-                        vnpay, dalopay
                     </Typography>
                 </Box>
             </Grid>

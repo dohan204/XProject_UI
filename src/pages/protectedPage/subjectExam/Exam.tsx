@@ -1,34 +1,24 @@
-import { Alert, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Paper, Snackbar, Typography, type SnackbarCloseReason } from '@mui/material'
+import { Box, Button, Card, CardActions, CardContent, CardHeader, IconButton, Paper, Skeleton, Snackbar, Typography, type SnackbarCloseReason } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
-// import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-// import type { Favorite } from '../../../model/examtest/FavoriteExam';
 import { type Exam } from '../../../model/apiResponse/ExamDetails';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookIcon from '@mui/icons-material/Book';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useAuth } from '../../../context/AuthContext';
+// import TabelSkeletion from '../TabelSkeletion';
 export default function ExamPHP() {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [exam, setExam] = useState<Exam[]>([]);
     const [openSnakbar, setOpenSnakbar] = useState<boolean>(false);
-    // const [examId, setExamId] = useState<number>(0);
+    const [message, setMessage] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false);
     const { code } = useParams()
-    // const [page, setPage] = useState<number>(0);
-    // const page_size = 4;
-    // const start = page * page_size;
-    // const end = start + page_size;
-
-    // const visible = exam.slice(start, end);
-    // const hasMore = end < exam.length
-    // const hasPrev = start > exam.length
-    // lasy ra danh sach bai thi theo mon hoc 
     const getExamBySubject = async () => {
         setLoading(true)
         try {
-            const res = await axios.get<Exam[]>(`http://localhost:8089/api/Exam/examBySubjectName?name=${code}`)
+            const res = await axios.get<Exam[]>(`https://api.testx.space/api/Exam/examBySubjectName?name=${code}`)
             setExam(res.data)
             console.log('lay du lieu thanh cong.', res.data);
         } catch (err) {
@@ -54,15 +44,21 @@ export default function ExamPHP() {
         };
         console.log(payload);
         try {
-            axios.post('http://localhost:8089/api/Exam/FavoriteExam', payload)
-            console.log('them vào danh sách yêu thích thành công.');
+            axios.post('https://api.testx.space/api/Exam/FavoriteExam', payload)
+            setMessage("Thêm vào danh sách yêu thích thành công.");
         } catch (err) {
-            console.error("lỗi khi thực hiện.", err)
+            if(err instanceof AxiosError) {
+                if(err.response?.status === 409) {
+                    setMessage("Bài thi đã tồn tại trong danh sách yêu thích")
+                } else if(err.response?.status === 500) {
+                    setMessage("Bài thi đã tồn tại trong ds")
+                }
+            }
         } finally {
-
+            // setOpenSnakbar(false)
         }
     }
-    const handleCloseSnakBar = (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+    const handleCloseSnakBar = (_: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
         if(reason === 'clickaway'){
             return;
         }
@@ -132,7 +128,9 @@ export default function ExamPHP() {
                     flexWrap={'wrap'}
                     p={1}
                 >
-                    {loading ? <Alert severity='success'>Dang tai du lieu...</Alert>
+                    {loading ? Array.from({length: 8}).map((_, i) => (
+                        <Skeleton key={i} variant='rounded' width={250} height={225} sx={{m: 2}} />
+                    ))
                         : exam.map((e) => (
                             <Box width={'22%'} height={'auto'} key={e.id} m={1}>
                                 <Card sx={{
@@ -173,7 +171,7 @@ export default function ExamPHP() {
                                                     open={openSnakbar}
                                                     autoHideDuration={1500}
                                                     onClose={handleCloseSnakBar}
-                                                    message="Đã thêm vào danh sách yêu thích."
+                                                    message={message}
                                                 />
                                                 <IconButton>
                                                     <BookIcon />

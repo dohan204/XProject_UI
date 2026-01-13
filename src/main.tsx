@@ -1,8 +1,6 @@
-import React from "react";
 import {createRoot} from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
-import App from "./App";
+import { AuthProvider } from './context/AuthContext';  // ⭐ Thêm dòng này
 
 import Login from './auth/login_register/Login'
 import Register from './auth/login_register/Register'
@@ -14,8 +12,6 @@ import HomePage from './pages/publicPage/HomePage'
 import About from './pages/publicPage/About'
 import Feature from './pages/publicPage/Feature'
 import News from './pages/publicPage/News'
-import Tutorials from './pages/publicPage/Tutorials'
-import Contact from './pages/publicPage/Contact'
 import TestFree from './pages/publicPage/Homepage/TestFree'
 
 import TestPage from './pages/protectedPage/subjectExam/TestPage'
@@ -25,6 +21,11 @@ import Profile from './pages/protectedPage/user/Profile'
 import RatingGeneric from './pages/protectedPage/RatingGeneric'
 
 import NotFoundPage from './auth/NotFoundPage'
+import SubjectName from "./pages/protectedPage/subjectExam/SubjectName";
+import GroupUser from "./pages/protectedPage/group/GroupUser";
+import FavoriteExam from "./pages/protectedPage/user/FavoriteExam";
+import HistoryExamWithUser from "./pages/protectedPage/user/HistoryExamWithUser";
+import UserSettings from "./pages/protectedPage/UserSettings";
 
 const router = createBrowserRouter([
   {
@@ -36,13 +37,10 @@ const router = createBrowserRouter([
       { path: "freetest/:id/result", element: <TestResult /> },
       { path: "about", element: <About /> },
       { path: "feature", element: <Feature /> },
-      { path: "news", element: <News /> },
-      { path: "tutorials", element: <Tutorials /> },
-      { path: "contact", element: <Contact /> },
+      { path: "news", element: <News /> },  
     ],
   },
 
-  // Public routes
   {
     element: <AuthLayout />,
     children: [
@@ -51,18 +49,22 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Protected routes
   {
-    element: <ProtectedRoute />,
+    element: <MainLayout />,
     children: [
       {
-        element: <MainLayout />,
+        element: <ProtectedRoute />,
         children: [
           { path: "test/:id", element: <TestPage /> },
           { path: "test/:id/result", element: <TestResult /> },
           { path: "subject/:code", element: <Exam /> },
-          { path: "profile", element: <Profile /> },
+          {path: "profile", element: <Profile />},
+          {path: "user/favoriteExam", element: <FavoriteExam /> },
+          {path: "user/history", element: <HistoryExamWithUser />},
+          {path: "user/settings", element: <UserSettings />},
+          { path: "group", element: <GroupUser /> },
           { path: "ratingeneric", element: <RatingGeneric /> },
+          { path: "subject", element: <SubjectName /> }
         ],
       },
     ],
@@ -72,7 +74,7 @@ const router = createBrowserRouter([
 ]);
 
 createRoot(document.getElementById("root")!).render(
-  <RouterProvider router={router} />
+  <AuthProvider>  {/* ⭐ Wrap ở đây */}
+    <RouterProvider router={router} />
+  </AuthProvider>
 );
-
-

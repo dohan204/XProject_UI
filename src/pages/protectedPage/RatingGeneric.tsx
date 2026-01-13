@@ -1,11 +1,10 @@
 import {
     Box, Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Typography, CircularProgress, Paper,
-    Button
+    TableHead, TableRow, Typography, Paper
 } from '@mui/material'
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import TabelSkeletion from './TabelSkeletion';
 
 // Interface
 interface Response {
@@ -25,17 +24,18 @@ interface ResponseScore {
     rank: number
 }
 
+
 export default function RatingGeneric() {
     const [loading, setLoading] = useState<boolean>(true)
     const [rating, setRating] = useState<Response[]>([])
-    const [scores, setScores] = useState<ResponseScore[]>([]) // đổi tên tránh trùng với mảng giả
-    const navigate = useNavigate();
+    const [scores, setScores] = useState<ResponseScore[]>([])
+
     const getRatingExam = async () => {
         setLoading(true)
         try {
             const [res1, res2] = await Promise.all([
-                axios.get<Response[]>('http://localhost:8089/api/Rating'),
-                axios.get<ResponseScore[]>('http://localhost:8089/api/Rating/Rank')
+                axios.get<Response[]>('https://api.testx.space/api/Rating'),
+                axios.get<ResponseScore[]>('https://api.testx.space/api/Rating/Rank')
             ])
 
             setRating(res1.data ?? [])
@@ -51,37 +51,29 @@ export default function RatingGeneric() {
         getRatingExam()
     }, [])
 
-    // Tính xếp hạng có xử lý đồng hạng (chuẩn thi thật)
+    // Tính xếp hạng có xử lý đồng hạng
     const rankedScores = scores
         .filter(e => e.score > 0)
-        .sort((a, b) => b.score - a.score) // cao → thấp
+        .sort((a, b) => b.score - a.score)
         .map((item, index, arr) => {
             if (index === 0) return { ...item, rank: 1 }
             const prev = arr[index - 1]
-            const rank = item.score === prev.score ? prev.rank : index + 1
+            const rank = item.score === prev.rank ? prev.rank : index + 1
             return { ...item, rank }
         })
 
-    // Hàm render icon/huy chương top 3
+    // Render icon/huy chương top 3
     const renderRank = (rank: number) => {
-        if (rank === 1) return <Typography fontWeight="bold" color="#FFD700" fontSize="1.4rem">1st</Typography>
-        if (rank === 2) return <Typography fontWeight="bold" color="#C0C0C0" fontSize="1.3rem">2nd</Typography>
-        if (rank === 3) return <Typography fontWeight="bold" color="#CD7F32" fontSize="1.2rem">3rd</Typography>
+        if (rank === 1) return <Typography fontWeight="bold" color="#FFD700" fontSize="1.4rem">🥇</Typography>
+        if (rank === 2) return <Typography fontWeight="bold" color="#C0C0C0" fontSize="1.3rem">🥈</Typography>
+        if (rank === 3) return <Typography fontWeight="bold" color="#CD7F32" fontSize="1.2rem">🥉</Typography>
         return <Typography fontWeight="bold">#{rank}</Typography>
     }
 
-    if (loading) {
-        return (
-            <Box display="flex" justifyContent="center" p={5}>
-                <CircularProgress />
-            </Box>
-        )
-    }
-
     return (
-        <Box width={'100%'}>
+        <Box width={'98vw'}>
             {/* ================== BẢNG 1: ĐỀ THI NHIỀU NHẤT ================== */}
-            <Box p={3}>
+            <Box p={3} height={'100vh'}>
                 <Typography variant="h5" color="lightseagreen" fontWeight="bold" gutterBottom>
                     Đề thi được thi nhiều nhất
                 </Typography>
@@ -96,18 +88,22 @@ export default function RatingGeneric() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rating
-                                .filter(e => e.numberOfExam > 0)
-                                .sort((a, b) => b.numberOfExam - a.numberOfExam) // nhiều → ít
-                                .slice(0, 10) // top 10 thôi cho đẹp
-                                .map((e, i) => (
-                                    <TableRow key={i} hover>
-                                        <TableCell>{i + 1}</TableCell>
-                                        <TableCell>{e.subjectName}</TableCell>
-                                        <TableCell>{e.titleExam}</TableCell>
-                                        <TableCell align="center">{e.numberOfExam}</TableCell>
-                                    </TableRow>
-                                ))}
+                            {loading ? (
+                                <TabelSkeletion row={10} col={4} />
+                            ) : (
+                                rating
+                                    .filter(e => e.numberOfExam > 0)
+                                    .sort((a, b) => b.numberOfExam - a.numberOfExam)
+                                    .slice(0, 10)
+                                    .map((e, i) => (
+                                        <TableRow key={i} hover>
+                                            <TableCell>{i + 1}</TableCell>
+                                            <TableCell>{e.subjectName}</TableCell>
+                                            <TableCell>{e.titleExam}</TableCell>
+                                            <TableCell align="center">{e.numberOfExam}</TableCell>
+                                        </TableRow>
+                                    ))
+                            )}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -132,7 +128,9 @@ export default function RatingGeneric() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rankedScores.length === 0 ? (
+                            {loading ? (
+                                <TabelSkeletion row={8} col={7} />
+                            ) : rankedScores.length === 0 ? (
                                 <TableRow>
                                     <TableCell colSpan={7} align="center">
                                         <Typography color="text.secondary">Chưa có dữ liệu xếp hạng</Typography>
@@ -155,8 +153,10 @@ export default function RatingGeneric() {
                                         <TableCell>{r.subjectName}</TableCell>
                                         <TableCell align="center">{r.numberOfQuestion}</TableCell>
                                         <TableCell>{new Date(r.examDate).toLocaleDateString('vi-VN')}</TableCell>
-                                        <TableCell align="center" color="primary">
-                                            {r.score.toFixed(1)}
+                                        <TableCell align="center">
+                                            <Typography fontWeight="bold" color="primary.main">
+                                                {r.score.toFixed(1)}
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
                                 ))

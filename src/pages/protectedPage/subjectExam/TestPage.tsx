@@ -1,16 +1,19 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Paper, Radio, RadioGroup, Typography } from '@mui/material';
-import React, { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams, useBlocker } from 'react-router-dom'
 import type { ExamDetails, Question } from '../../../model/apiResponse/ExamDetails';
 import axios from 'axios';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import CameraProctor from '../../../component/CameraProtor';
 import background from '../../../assets/background3.jpg'
 import DialogConfirm from './DialogConfirm';
+// import { useLocalizationContext } from '@mui/x-date-pickers/internals';
 
 // import AutoSubmitWarning from './AutoSubmit';
 type ChoiceOption = Record<number, string>;
 export default function TestPage() {
+    // const location = useLocation();
     // reset value when page reload
     const getInitialState = (key: string, defaultValue: ChoiceOption | number) => {
         // lấy ra danh sách từ localStorage
@@ -28,8 +31,9 @@ export default function TestPage() {
         getInitialState('exam', {})
     );
     const location = useLocation();
-    const params = useParams()
+    // const params = useParams()
     const [tab, setTab] = useState(!document.hidden);
+    console.log('tab hiện tại: ', tab)
     const [numberChangeTab, setNumberChangeTab] = useState<number>(0)
     const [message, setMessage] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false);
@@ -47,7 +51,7 @@ export default function TestPage() {
     const [middleWarning, setMiddleWaring] = useState<boolean>(false)
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    debugger;
+    // debugger;
     // logic chặn
     const blocker = useBlocker(({ currentLocation, nextLocation }) => {
         console.log('isDirty value:', isDirty);
@@ -64,7 +68,6 @@ export default function TestPage() {
             setShowModel(false)
         }
     }, [blocker.state, isDirty])
-
     // hàm xử lý khi người dùng rời đi 
     const handleProceed = () => {
         setShowModel(false)
@@ -78,11 +81,6 @@ export default function TestPage() {
             blocker.proceed();
         }
     }
-    useEffect(() => {
-        if(!openAuto){
-            handleProceed
-        }
-    }, [openAuto])
     // hàm ở lại khi người dùng bắm hủy 
     const handleCancel = () => {
         setShowModel(false)
@@ -102,7 +100,7 @@ export default function TestPage() {
 
         const getDetails = async () => {
             try {
-                const res = await axios.get<ExamDetails>(`http://localhost:8089/api/Exam/examDetails/${examId}`);
+                const res = await axios.get<ExamDetails>(`https://api.testx.space/api/Exam/examDetails/${examId}`);
                 setExam(res.data);
                 setQuestion(res.data.question);
                 localStorage.setItem('examResponse', JSON.stringify(res.data))
@@ -162,7 +160,7 @@ export default function TestPage() {
         const examData = JSON.parse(exam);
         setLoading(true);
         try {
-            var result = await axios.post(`http://localhost:8089/api/Exam/submitExam/${examId}`, examData, {
+            var result = await axios.post(`https://api.testx.space/api/Exam/submitExam/${examId}`, examData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -170,7 +168,7 @@ export default function TestPage() {
             })
             const res = JSON.stringify(result.data)
             console.log(res)
-            localStorage.setItem('resultExam', res);
+            sessionStorage.setItem('resultExam', res);
             sessionStorage.removeItem('examStart');
             // setResult(res);
         } catch (errr) {
@@ -190,6 +188,11 @@ export default function TestPage() {
         // handleProceed()
     }
 
+
+    // handle close isdirty 
+    const handleCloseIsDirty = () => {
+        setIsDirty(false);
+    }
     // check tab visibility change
     useEffect(() => {
         const handleChangeVisibility = () => {
@@ -226,8 +229,9 @@ export default function TestPage() {
         if (openAuto) {
             const timer = setTimeout(() => {
                 AutoSubmit()
+                setIsDirty(false)
+                handleProceed()
             }, 2000);
-
             return () => clearTimeout(timer);
         }
     }, [openAuto])
@@ -285,7 +289,10 @@ export default function TestPage() {
         setIsDirty(true)
     };
 
-    const handleOpenDialog = () => setOpenDialog(true);
+    const handleOpenDialog = () => {
+        setOpenDialog(true)
+        setIsDirty(false);
+    };
     const handleCloseDialog = () => setOpenDialog(false);
 
     const disablePrevious = selectedIndex === 0;
@@ -313,6 +320,10 @@ export default function TestPage() {
     //         e.preventDefault();
     //     })
     // }
+    const handleCameraViolation = () => {
+        setNumberChangeTab(prev => prev + 1)
+    }
+
     return (
         <Box width={'98vw'} display={'flex'} flexDirection={'column'}
             sx={{ backgroundImage: `${background}` }}
@@ -448,7 +459,9 @@ export default function TestPage() {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <DialogConfirm open={openDialog} handleClose={handleCloseDialog} examId={exam?.id} />
+            <DialogConfirm open={openDialog} handleProcesseds={handleProceed}
+                handleClose={handleCloseDialog} examId={exam?.id} Isdirty={handleCloseIsDirty} />
+            <CameraProctor onViolation={handleCameraViolation} />
         </Box>
     );
 }

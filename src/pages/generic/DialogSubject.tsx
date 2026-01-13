@@ -1,12 +1,12 @@
-import { Dialog } from '@mui/material'
-import React, { useState } from 'react'
+// import { Dialog } from '@mui/material'
+// import React, { useState } from 'react'
 
-export default function DialogSubject() {
-    const [open, setOpen ] = useState<boolean>(false);
+// export default function DialogSubject() {
+//     const [open, setOpen ] = useState<boolean>(false);
     
-  return (
-    <>
+//   return (
+//     <>
         
-    </>
-  )
-}
+//     </>
+//   )
+// }
